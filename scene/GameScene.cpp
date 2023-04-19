@@ -11,9 +11,34 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
-void GameScene::Update() {}
+void GameScene::Update() {
+
+
+
+
+
+
+
+
+
+
+}
 
 void GameScene::Draw() {
 
@@ -28,8 +53,28 @@ void GameScene::Draw() {
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 	// スプライト描画後処理
 	Sprite::PostDraw();
+
+
+
+
+
+
+
 	// 深度バッファクリア
 	dxCommon_->ClearDepthBuffer();
 #pragma endregion
@@ -41,6 +86,19 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
