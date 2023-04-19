@@ -2,18 +2,56 @@
 #include "TextureManager.h"
 #include <cassert>
 
-GameScene::GameScene() {}
+GameScene::GameScene() {
 
-GameScene::~GameScene() {}
+
+
+
+
+
+}
+
+GameScene::~GameScene() {
+
+
+
+
+
+
+
+
+
+}
 
 void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+	textureHandle_ = TextureManager::Load("mario.jpg");
+	sprite_ = Sprite::Create(textureHandle_, { 100,50 });
+	delete sprite_;
+
+
+
+
+
+
+
 }
 
-void GameScene::Update() {}
+void GameScene::Update() {
+
+
+
+
+
+
+
+
+
+
+}
 
 void GameScene::Draw() {
 
@@ -27,6 +65,8 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
+
+	sprite_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
