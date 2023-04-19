@@ -12,10 +12,12 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
+	textureHandle_ = TextureManager::Load("uvChecker.png");
+	model_ = Model::Create();
+	viewProjection_.Initialize();
 
-
-
-
+	player_ = new Player();
+	player_->Initialize();
 
 
 
@@ -29,7 +31,7 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 
-
+	player_->Update();
 
 
 
@@ -52,7 +54,6 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
-
 
 
 
