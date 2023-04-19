@@ -1,25 +1,15 @@
 #include "GameScene.h"
 #include "TextureManager.h"
 #include <cassert>
+#include<ImGuiManager.h>
+#include<PrimitiveDrawer.h>
+#include"AxisIndicator.h"
 
 GameScene::GameScene() {
-
-
-
-
-
 
 }
 
 GameScene::~GameScene() {
-
-
-
-
-
-
-
-
 
 }
 
@@ -28,28 +18,50 @@ void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-	textureHandle_ = TextureManager::Load("mario.jpg");
+	textureHandle_ = TextureManager::Load("sample.png");
 	sprite_ = Sprite::Create(textureHandle_, { 100,50 });
-	delete sprite_;
+	model_ = Model::Create();
+	worldTransform_.Initialize();
+	viewProjection_.Initialize();
 
+	soundDataHandle_ = audio_->LoadWave("mokugyo.wav");
+	audio_->PlayWave(soundDataHandle_);
 
+	voiceHandle_ = audio_->PlayWave(soundDataHandle_, true);
 
+	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
+	debugCamera_ = new DebugCamera(640, 360);
 
-
-
+	AxisIndicator::GetInstance()->SetVisible(true);
+	AxisIndicator::GetInstance()->SetTargetViewProjection(
+		&debugCamera_->GetViewProjection());
 
 }
 
 void GameScene::Update() {
 
+	Vector2 position = sprite_->GetPosition();
 
 
+	sprite_->SetPosition(position);
 
 
+	if (input_->TriggerKey(DIK_SPACE)) {
+		audio_->StopWave(voiceHandle_);
+		position.x += 2.0f;
+		position.y += 1.0f;
 
+	}
 
+	ImGui::Begin("Debug1");
 
+	ImGui::ShowDemoWindow();
+	ImGui::Text("Tsuzukibashi Masami %d,%d,%d", 2023, 04, 19);
+	ImGui::InputFloat3("InputFloat3", inputFloat3);
+	ImGui::SliderFloat3("SliderFloat3", inputFloat3, 0.0f, 1.0f);
+	ImGui::End();
 
+	debugCamera_->Update();
 
 }
 
@@ -82,6 +94,9 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 
+	model_->Draw(worldTransform_,
+	debugCamera_->GetViewProjection(), textureHandle_);
+
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion
@@ -96,6 +111,15 @@ void GameScene::Draw() {
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
+	PrimitiveDrawer::GetInstance()->DrawLine3d(
+		{ 0,0,0 }, { 10,10,0 }, { 1.0f,0.0f,0.0f,1.0f }
+	);
+	PrimitiveDrawer::GetInstance()->DrawLine3d(
+		{ 0,0,0 }, { 10,0,10 }, { 1.0f,0.0f,0.0f,1.0f }
+	);
+	PrimitiveDrawer::GetInstance()->DrawLine3d(
+		{ 0,0,0 }, { 0,10,10 }, { 1.0f,0.0f,0.0f,1.0f }
+	);
 
 #pragma endregion
 }
