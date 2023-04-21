@@ -42,14 +42,14 @@ void GameScene::Update() {
 
 	Vector2 position = sprite_->GetPosition();
 
-
-	sprite_->SetPosition(position);
+position.x += 2.0f;
+		position.y += 1.0f;
+		sprite_->SetPosition(position);
 
 
 	if (input_->TriggerKey(DIK_SPACE)) {
 		audio_->StopWave(voiceHandle_);
-		position.x += 2.0f;
-		position.y += 1.0f;
+		
 
 	}
 
