@@ -30,6 +30,7 @@ public: // メンバ関数
 	/// 初期化
 	/// </summary>
 	void Initialize();
+	
 
 	/// <summary>
 	/// 毎フレーム処理
