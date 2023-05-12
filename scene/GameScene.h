@@ -8,6 +8,7 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include"Player.h"
 
 /// <summary>
 /// ゲームシーン
@@ -38,7 +39,7 @@ public: // メンバ関数
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw();
+	void Draw(/*ViewProjection*/);
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -48,4 +49,11 @@ private: // メンバ変数
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
+
+	ViewProjection viewProjection_;
+
+	Model* model_ = nullptr;
+	uint32_t textureHandle_ = 0u;
+
+	Player* player_ = nullptr;
 };
