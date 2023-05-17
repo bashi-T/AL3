@@ -12,7 +12,7 @@ class Player {
 public:
 	void Initialize(Model* model, uint32_t textureHandle);
 	void Update();
-	void Draw();
+	void Draw(ViewProjection viewProjection_);
 
 private:
 	WorldTransform worldTransform_;

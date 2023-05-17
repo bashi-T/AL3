@@ -3,11 +3,15 @@
 
 void Player::Initialize(Model* model, uint32_t textureHandle){
 	assert(model);
+	textureHandle = TextureManager::Load("cube.png");
+	model = Model::Create();
+	worldTransform_.Initialize();
 };
 
 void Player::Update(){
+	worldTransform_.TransferMatrix();
 };
 
-void Player::Draw(){
+void Player::Draw(ViewProjection viewProjection_) {
+	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
 };
-
