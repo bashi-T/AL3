@@ -6,7 +6,11 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {}
+GameScene::~GameScene() 
+{
+	delete player_;
+	delete model_;
+}
 
 void GameScene::Initialize()
 {
@@ -14,44 +18,22 @@ void GameScene::Initialize()
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-
-
-
-	model_ = new Model();
-	player_ = new Player();
-
-	player_->Initialize(model_, textureHandle_);
-
+	textureHandle_ = TextureManager::Load("cube.jpg");
+	model_ = Model::Create();
+	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 
-
-
-
-
-
-
-
-
-
+	player_ = new Player();
+	player_->Initialize(model_, textureHandle_);
 }
 
 void GameScene::Update()
 {
-
 	player_->Update();
-
-
-
-
-
-
-
-
 }
 
 void GameScene::Draw()
 {
-
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
@@ -62,17 +44,6 @@ void GameScene::Draw()
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
-
-
-
-
-
-
-
-
-
-
-
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -88,19 +59,7 @@ void GameScene::Draw()
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 
-	player_->Draw(viewProjection_, textureHandle_);
-
-
-
-
-
-
-
-
-
-
-
-
+	player_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -114,19 +73,8 @@ void GameScene::Draw()
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
 
-
-
-
-
-
-
-
 	// スプライト描画後処理
 	Sprite::PostDraw();
 
 #pragma endregion
-
-	delete player_;
-	delete model_;
-
 }

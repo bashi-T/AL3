@@ -51,6 +51,7 @@ private: // メンバ変数
 	/// </summary>
 
 	ViewProjection viewProjection_;
+	WorldTransform worldTransform_;
 
 	Model* model_ = nullptr;
 	uint32_t textureHandle_ = 0u;
