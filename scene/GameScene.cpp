@@ -16,7 +16,7 @@ void GameScene::Initialize()
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	textureHandle_ = TextureManager::Load("cube.jpg");
+	textureHandle_ = TextureManager::Load("cube.png");
 	model_ = Model::Create();
 	viewProjection_.Initialize();
 
