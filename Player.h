@@ -1,16 +1,27 @@
 #pragma once
-#include "DirectXCommon.h"
 #include "Model.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include"Sprite.h"
-#include "TextureManager.h"
 
 class Player {
 public:
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="model"></param>
+	/// <param name="textureHandle"></param>
 	void Initialize(Model* model, uint32_t textureHandle);
+	
+	/// <summary>
+	/// 
+	/// </summary>
 	void Update();
-	void Draw(ViewProjection viewProjection_);
+	
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="viewProjection"></param>
+	void Draw(ViewProjection viewProjection);
 
 private:
 	WorldTransform worldTransform_;

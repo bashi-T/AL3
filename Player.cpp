@@ -3,8 +3,10 @@
 
 void Player::Initialize(Model* model, uint32_t textureHandle){
 	assert(model);
-	textureHandle = TextureManager::Load("cube.png");
-	model = Model::Create();
+
+	model_ = model;
+	textureHandle_ = textureHandle;
+
 	worldTransform_.Initialize();
 };
 
