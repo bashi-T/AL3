@@ -2,7 +2,7 @@
 #include "Model.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-
+#include<Input.h>
 class Player {
 public:
 	/// <summary>
@@ -27,4 +27,5 @@ private:
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
 	uint32_t textureHandle_ = 0u;
+	Input* input_ = nullptr;
 };
