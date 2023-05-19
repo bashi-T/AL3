@@ -2,7 +2,6 @@
 
 #include "Audio.h"
 #include "DirectXCommon.h"
-#include "Input.h"
 #include "Model.h"
 #include "SafeDelete.h"
 #include "Sprite.h"
