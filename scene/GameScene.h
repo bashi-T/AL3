@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Audio.h"
 #include "DirectXCommon.h"
 #include "Input.h"
@@ -56,5 +55,4 @@ private: // メンバ変数
 	ViewProjection viewProjection_;
 
 	Player* player_ = nullptr;
-
 };

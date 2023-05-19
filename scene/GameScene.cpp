@@ -72,6 +72,5 @@ void GameScene::Draw() {
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
-
 #pragma endregion
 }
