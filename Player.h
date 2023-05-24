@@ -17,6 +17,8 @@ public:
 	/// </summary>
 	void Update();
 	
+	void Rotate();
+
 	/// <summary>
 	/// 
 	/// </summary>
