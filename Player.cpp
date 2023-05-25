@@ -1,6 +1,13 @@
 #include"Player.h"
 #include<assert.h>
 #include"ImGuiManager.h"
+
+Player::~Player()
+{
+	for (PlayerBullet* bullet : bullets_) {
+	   delete bullet;
+	}
+}
 void Player::Initialize(Model* model, uint32_t textureHandle){
 	assert(model);
 
@@ -55,8 +62,8 @@ void Player::Update(){
 	worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
 
 	Attack();
-	if (bullet_) {
-		bullet_->Update();
+	for (PlayerBullet* bullet:bullets_) {
+		bullet->Update();
 	}
 }
 
@@ -75,14 +82,14 @@ void Player::Attack()
 	if (input_->PushKey(DIK_SPACE)) {
 		PlayerBullet* newBullet = new PlayerBullet();
 		newBullet->Initialise(model_, worldTransform_.translation_);
-		bullet_ = newBullet;
+		bullets_.push_back(newBullet);
 	}
 }
 ;
 
 void Player::Draw(ViewProjection viewProjection_) {
 	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
-	if (bullet_) {
-		bullet_->Draw(viewProjection_);
+	for (PlayerBullet* bullet : bullets_) {
+		bullet->Draw(viewProjection_);
 	}
 };

@@ -4,8 +4,10 @@
 #include "WorldTransform.h"
 #include<Input.h>
 #include"PlayerBullet.h"
+#include"list"
 class Player {
 public:
+	~Player();
 	/// <summary>
 	/// 
 	/// </summary>
@@ -27,6 +29,8 @@ public:
 	/// </summary>
 	/// <param name="viewProjection"></param>
 	void Draw(ViewProjection viewProjection);
+
+	std::list<PlayerBullet*>bullets_;
 
 private:
 	PlayerBullet* bullet_ = nullptr;
