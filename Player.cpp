@@ -1,6 +1,5 @@
 #include"Player.h"
 #include<assert.h>
-#include"ALVector.h"
 #include"ImGuiManager.h"
 void Player::Initialize(Model* model, uint32_t textureHandle){
 	assert(model);
@@ -12,6 +11,8 @@ void Player::Initialize(Model* model, uint32_t textureHandle){
 };
 
 void Player::Update(){
+	worldTransform_.UpdateMatrix();
+
 	Vector3 move = { 0,0,0 };
 	const float kCharacterSpeed = 0.4f;
 
@@ -53,6 +54,10 @@ void Player::Update(){
 	worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
 	worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
 
+	Attack();
+	if (bullet_) {
+		bullet_->Update();
+	}
 }
 
 void Player::Rotate()
@@ -64,8 +69,20 @@ void Player::Rotate()
 	if (input_->PushKey(DIK_D)) {
 		worldTransform_.rotation_.y += kRotSpeed;
 	}
-};
+}
+void Player::Attack()
+{
+	if (input_->PushKey(DIK_SPACE)) {
+		PlayerBullet* newBullet = new PlayerBullet();
+		newBullet->Initialise(model_, worldTransform_.translation_);
+		bullet_ = newBullet;
+	}
+}
+;
 
 void Player::Draw(ViewProjection viewProjection_) {
 	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
+	if (bullet_) {
+		bullet_->Draw(viewProjection_);
+	}
 };

@@ -5,8 +5,6 @@
 #include "Model.h"
 #include "SafeDelete.h"
 #include "Sprite.h"
-#include "ViewProjection.h"
-#include "WorldTransform.h"
 #include"Player.h"
 #include"DebugCamera.h"
 

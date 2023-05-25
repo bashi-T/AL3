@@ -12,8 +12,10 @@ void PlayerBullet::Initialise(Model* model, const Vector3& position)
 
 void PlayerBullet::Update()
 {
+	worldTransform_.UpdateMatrix();
 }
 
-//void PlayerBullet::Draw(const ViewProjection& viewProjection)
-//{
-//}
+void PlayerBullet::Draw(const ViewProjection& viewProjection)
+{
+	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+}
