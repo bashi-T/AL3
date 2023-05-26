@@ -5,7 +5,7 @@ void PlayerBullet::Initialise(Model* model, const Vector3& position, const Vecto
 {
 	assert(model);
 	model_ = model;
-	textureHandle_ = TextureManager::Load("renga.png");
+	textureHandle_ = TextureManager::Load("glass.png");
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = { position.x,position.y,position.z };
 	velocity_ = velocity;

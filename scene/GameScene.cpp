@@ -18,7 +18,7 @@ void GameScene::Initialize()
 	audio_ = Audio::GetInstance();
 
 
-	textureHandle_ = TextureManager::Load("JunglePocket.png");
+	textureHandle_ = TextureManager::Load("worldmap.png");
 	model_ = Model::Create();
 	viewProjection_.Initialize();
 
