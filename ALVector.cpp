@@ -1,10 +1,4 @@
-#pragma once
-#include <Matrix4x4.h>
-#include <Vector2.h>
-#include <Vector3.h>
-#include <assert.h>
-#include <cmath>
-#include <stdio.h>
+#include "ALVector.h"
 
 Vector3 Add(const Vector3& v1, const Vector3& v2) {
 	Vector3 v3 = {v1.x + v2.x, v1.y + v2.y, v1.z + v2.z};
