@@ -1,7 +1,7 @@
 #include "GameScene.h"
+#include "AxisIndicator.h"
 #include "TextureManager.h"
 #include <cassert>
-#include"AxisIndicator.h"
 
 GameScene::GameScene() {}
 
@@ -11,12 +11,10 @@ GameScene::~GameScene() {
 	delete debugCamera_;
 }
 
-void GameScene::Initialize()
-{
+void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-
 
 	textureHandle_ = TextureManager::Load("JunglePocket.png");
 	model_ = Model::Create();
@@ -29,17 +27,14 @@ void GameScene::Initialize()
 
 	AxisIndicator::GetInstance()->SetVisible(true);
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
-
 }
 
-void GameScene::Update()
-{
+void GameScene::Update() {
 	player_->Update();
 	debugCamera_->Update();
 
 #ifdef _DEBUG
-	if (input_->TriggerKey(DIK_S))
-	{
+	if (input_->TriggerKey(DIK_S)) {
 		isDebugCameraActive_ = true;
 	}
 #endif
@@ -49,9 +44,7 @@ void GameScene::Update()
 		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
 		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
 		viewProjection_.TransferMatrix();
-	}
-	else 
-	{
+	} else {
 		viewProjection_.UpdateMatrix();
 	}
 }

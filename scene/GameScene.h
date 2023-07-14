@@ -1,14 +1,14 @@
 #pragma once
 
 #include "Audio.h"
+#include "DebugCamera.h"
 #include "DirectXCommon.h"
 #include "Model.h"
+#include "Player.h"
 #include "SafeDelete.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include"Player.h"
-#include"DebugCamera.h"
 
 /// <summary>
 /// ゲームシーン
@@ -57,6 +57,4 @@ private: // メンバ変数
 	Player* player_ = nullptr;
 	bool isDebugCameraActive_ = false;
 	DebugCamera* debugCamera_ = nullptr;
-	
-
 };

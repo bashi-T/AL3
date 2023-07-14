@@ -1,5 +1,4 @@
 #pragma once
-#include<cmath>
 /// <summary>
 /// 4x4行列
 /// </summary>
