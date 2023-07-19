@@ -9,6 +9,7 @@ public:
 	void Update();
 	void Draw(const ViewProjection& viewProjection);
 	void OnCollition();
+	Vector3 GetWorldPosition();
 	bool IsDead() const { return isDead_; }
 
 	private:

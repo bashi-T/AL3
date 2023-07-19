@@ -40,6 +40,8 @@ public: // メンバ関数
 	/// </summary>
 	void Draw(/*ViewProjection*/);
 
+	void CheckAllCollitions();
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -55,6 +57,8 @@ private: // メンバ変数
 	ViewProjection viewProjection_;
 	Player* player_ = nullptr;
 	Enemy* enemy_ = nullptr;
+	EnemyBullet* enemyBullet_ = nullptr;
+	PlayerBullet* playerBullet_ = nullptr;
 	bool isDebugCameraActive_ = false;
 	DebugCamera* debugCamera_ = nullptr;
 };

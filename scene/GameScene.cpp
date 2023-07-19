@@ -42,7 +42,7 @@ void GameScene::Update()
 	player_->Rotate();
 	debugCamera_->Update();
 	enemy_->Update();
-
+	CheckAllCollitions();
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_S))
 	{
@@ -107,5 +107,55 @@ void GameScene::Draw() {
 	// スプライト描画後処理
 	Sprite::PostDraw();
 
+#pragma endregion
+}
+
+void GameScene::CheckAllCollitions()
+{
+	Vector3 posA, posB;
+	const std::list<PlayerBullet*>& playerBullets = player_->GetBullets();
+	const std::list<EnemyBullet*>& enemyBullets = enemy_->GetBullets();
+#pragma region
+	posA = player_->GetWorldPosition();
+	for (EnemyBullet* bullet : enemyBullets)
+	{
+		posB = bullet->GetWorldPosition();
+		Vector3 distance = Subtract(posA, posB);
+		if ((distance.x * distance.x) + (distance.y * distance.y) +
+			(distance.z * distance.z) <= 4)
+		    {
+			player_->OnCollition();
+			bullet->OnCollition();
+		}
+	}
+#pragma endregion
+
+#pragma region
+	posA = enemy_->GetWorldPosition();
+	for (PlayerBullet* bullet : playerBullets)
+	{
+		posB = bullet->GetWorldPosition();
+		Vector3 distance = Subtract(posA, posB);
+		if ((distance.x * distance.x) + (distance.y * distance.y) + (distance.z * distance.z) <=
+		    4) {
+			player_->OnCollition();
+			bullet->OnCollition();
+		}
+	}
+#pragma endregion
+
+#pragma region
+	for (PlayerBullet* PlayerBullet : playerBullets) {
+		for (EnemyBullet* EnemyBullet : enemyBullets) {
+			posA = PlayerBullet->GetWorldPosition();
+			posB = EnemyBullet->GetWorldPosition();
+			Vector3 distance = Subtract(posA, posB);
+			if ((distance.x * distance.x) + (distance.y * distance.y) + (distance.z * distance.z) <=
+			    4) {
+				PlayerBullet->OnCollition();
+				EnemyBullet->OnCollition();
+			}
+		}
+	}
 #pragma endregion
 }

@@ -3,13 +3,14 @@
 void EnemyBullet::Initialise(Model* model, const Vector3& position, const Vector3& velocity) {
 	assert(model);
 	model_ = model;
-	textureHandle_ = TextureManager::Load("renga.png");
+	textureHandle_ = TextureManager::Load("ganban.png");
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = {position.x, position.y, position.z};
 	velocity_ = velocity;
 }
 
-void EnemyBullet::Update() {
+void EnemyBullet::Update()
+{
 	worldTransform_.translation_.x += velocity_.x;
 	worldTransform_.translation_.y += velocity_.y;
 	worldTransform_.translation_.z += velocity_.z;
@@ -24,3 +25,11 @@ void EnemyBullet::Draw(const ViewProjection& viewProjection) {
 }
 
 void EnemyBullet::OnCollition() { isDead_ = true; }
+
+Vector3 EnemyBullet::GetWorldPosition() {
+	Vector3 worldPos;
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+	return worldPos;
+}

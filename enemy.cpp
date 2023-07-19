@@ -66,7 +66,7 @@ void Enemy::Approach() {
 	worldTransform_.translation_.x += kEnemySpeedX;
 	worldTransform_.translation_.y += kEnemySpeedY;
 	worldTransform_.translation_.z += kEnemySpeedZ;
-	if (worldTransform_.translation_.z < 0.0f) {
+	if (worldTransform_.translation_.z < 20.0f) {
 		phase_ = Phase::Leave;
 	}
 }
@@ -103,9 +103,11 @@ void Enemy::ResetApproach() {
 	FireTimer = 10; }
 
 Vector3 Enemy::GetWorldPosition() {
-	    Vector3 worldPos;
-	    worldPos.x = worldTransform_.translation_.x;
-	    worldPos.y = worldTransform_.translation_.y;
-	    worldPos.z = worldTransform_.translation_.z;
-	    return worldPos;
+	Vector3 worldPos;
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+	return worldPos;
 }
+
+void Enemy::OnCollition() {}
