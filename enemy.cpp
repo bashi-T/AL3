@@ -1,15 +1,30 @@
 #include "enemy.h"
 
-void Enemy::Initialise(Model* model)
+Enemy::~Enemy()
 {
+	for (EnemyBullet* bullet : bullets_) {
+		delete bullet;
+	}
+}
+
+void Enemy::Initialise(Model* model) {
 	assert(model);
 	model_ = model;
 	textureHandle_ = TextureManager::Load("sand.png");
 	worldTransform_.Initialize();
-	worldTransform_.translation_ = { 0,5,100 };
+	input_ = Input::GetInstance();
+	worldTransform_.translation_ = {0, 5, 100};
 }
 
 void Enemy::Update() {
+	bullets_.remove_if([](EnemyBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
+	
 	const float kBulletSpeedZ = -0.5f;
 	Vector3 velocity(0, 0, kBulletSpeedZ);
 
@@ -23,11 +38,22 @@ void Enemy::Update() {
 		break;
 	}
 	worldTransform_.UpdateMatrix();
+	ResetApproach();
+
+	if (bullet_) {
+		bullet_->Update();
+	}
+	for (EnemyBullet* bullet : bullets_) {
+		bullet->Update();
+	}
 }
 
 void Enemy::Draw(const ViewProjection& viewProjection)
 {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	for (EnemyBullet* bullet : bullets_) {
+		bullet->Draw(viewProjection);
+	}
 }
 
 void Enemy::Approach() {
@@ -48,4 +74,21 @@ void Enemy::Leave() {
 	if (worldTransform_.translation_.z > 100.0f) {
 		phase_ = Phase::Approach;
 	}
+}
+
+void Enemy::Fire()
+{ 
+	if (input_->PushKey(DIK_SPACE))
+	{
+		const float kBulletSpeedZ = -1.0f;
+		Vector3 velocity(0, 0, kBulletSpeedZ);
+		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+		EnemyBullet* newBullet = new EnemyBullet;
+		newBullet->Initialise(model_, worldTransform_.translation_, velocity);
+		bullets_.push_back(newBullet);
+	}
+}
+
+void Enemy::ResetApproach() {
+	FireTimer = 10;
 }

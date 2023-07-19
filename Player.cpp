@@ -1,6 +1,4 @@
 #include"Player.h"
-#include<assert.h>
-#include"ImGuiManager.h"
 
 Player::~Player()
 {

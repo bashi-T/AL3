@@ -1,20 +1,29 @@
 #pragma once
-#include "Model.h"
+#include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "Model.h"
 #include"Player.h"
+#include<Input.h>
+#include"ImGuiManager.h"
+#include"list"
+#include"EnemyBullet.h"
 
 class Enemy
 {
 public:
+
+	~Enemy();
 	void Initialise(Model* model);
 
 	void Update();
 
 	void Draw(const ViewProjection& viewProjection);
 
-		void Approach();
+	void Approach();
 
 	void Leave();
+
+	void Fire();
 	
 	enum class Phase {
 		Approach,
@@ -22,12 +31,16 @@ public:
 	};
 	Phase phase_ = Phase::Approach;
 
+	std::list<EnemyBullet*> bullets_;
+
 private:
+	EnemyBullet* bullet_ = nullptr;
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
 	uint32_t textureHandle_ = 0u;
 	Player* player_ = nullptr;
-	
+	Input* input_ = nullptr;
+
 	float kEnemySpeedX = 0.0f;
 	float kEnemySpeedY = 0.0f;
 	float kEnemySpeedZ = 0.0f;

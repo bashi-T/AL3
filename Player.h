@@ -5,6 +5,8 @@
 #include<Input.h>
 #include"PlayerBullet.h"
 #include"list"
+#include"ImGuiManager.h"
+
 class Player {
 public:
 	~Player();
