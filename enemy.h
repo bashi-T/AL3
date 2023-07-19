@@ -25,6 +25,8 @@ public:
 
 	void Fire();
 	
+	void ResetApproach();
+
 	enum class Phase {
 		Approach,
 		Leave,
@@ -32,6 +34,7 @@ public:
 	Phase phase_ = Phase::Approach;
 
 	std::list<EnemyBullet*> bullets_;
+	static const int kFireInterval = 60;
 
 private:
 	EnemyBullet* bullet_ = nullptr;
@@ -40,7 +43,7 @@ private:
 	uint32_t textureHandle_ = 0u;
 	Player* player_ = nullptr;
 	Input* input_ = nullptr;
-
+	int32_t FireTimer = 0;
 	float kEnemySpeedX = 0.0f;
 	float kEnemySpeedY = 0.0f;
 	float kEnemySpeedZ = 0.0f;
