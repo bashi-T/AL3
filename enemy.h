@@ -12,13 +12,24 @@ public:
 
 	void Draw(const ViewProjection& viewProjection);
 
+		void Approach();
 
+	void Leave();
+	
+	enum class Phase {
+		Approach,
+		Leave,
+	};
+	Phase phase_ = Phase::Approach;
 
 private:
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
 	uint32_t textureHandle_ = 0u;
 	Player* player_ = nullptr;
-
+	
+	float kEnemySpeedX = 0.0f;
+	float kEnemySpeedY = 0.0f;
+	float kEnemySpeedZ = 0.0f;
 };
 
