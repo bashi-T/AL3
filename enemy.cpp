@@ -14,6 +14,7 @@ void Enemy::Initialise(Model* model) {
 	worldTransform_.Initialize();
 	input_ = Input::GetInstance();
 	worldTransform_.translation_ = {0, 5, 100};
+	ResetApproach();
 }
 
 void Enemy::Update() {
@@ -38,8 +39,11 @@ void Enemy::Update() {
 		break;
 	}
 	worldTransform_.UpdateMatrix();
-	ResetApproach();
-
+	FireTimer--;
+	if (FireTimer == 0) {
+		Fire();
+		FireTimer = kFireInterval;
+	}
 	if (bullet_) {
 		bullet_->Update();
 	}
@@ -71,22 +75,19 @@ void Enemy::Leave() {
 	worldTransform_.translation_.x += kEnemySpeedX;
 	worldTransform_.translation_.y += kEnemySpeedY;
 	worldTransform_.translation_.z += kEnemySpeedZ;
-	if (worldTransform_.translation_.z > 100.0f) {
+	if (worldTransform_.translation_.z > 120.0f) {
 		phase_ = Phase::Approach;
 	}
 }
 
 void Enemy::Fire()
 { 
-	if (input_->PushKey(DIK_SPACE))
-	{
 		const float kBulletSpeedZ = -1.0f;
 		Vector3 velocity(0, 0, kBulletSpeedZ);
 		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 		EnemyBullet* newBullet = new EnemyBullet;
 		newBullet->Initialise(model_, worldTransform_.translation_, velocity);
 		bullets_.push_back(newBullet);
-	}
 }
 
 void Enemy::ResetApproach() {
