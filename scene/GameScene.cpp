@@ -18,7 +18,6 @@ void GameScene::Initialize()
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-
 	textureHandle_ = TextureManager::Load("worldmap.png");
 	model_ = Model::Create();
 	viewProjection_.Initialize();
@@ -32,7 +31,6 @@ void GameScene::Initialize()
 
 	AxisIndicator::GetInstance()->SetVisible(true);
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
-
 }
 
 void GameScene::Update()
