@@ -2,11 +2,12 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "Model.h"
-#include"Player.h"
 #include<Input.h>
 #include"ImGuiManager.h"
 #include"list"
 #include"EnemyBullet.h"
+
+class Player;
 
 class Enemy
 {
@@ -27,6 +28,9 @@ public:
 	
 	void ResetApproach();
 
+	Vector3 GetWorldPosition();
+
+	void SetPlayer(Player* player) { player_ = player; }
 	enum class Phase {
 		Approach,
 		Leave,
@@ -34,7 +38,7 @@ public:
 	Phase phase_ = Phase::Approach;
 
 	std::list<EnemyBullet*> bullets_;
-	static const int kFireInterval = 60;
+	static const int kFireInterval = 64;
 
 private:
 	EnemyBullet* bullet_ = nullptr;

@@ -1,4 +1,5 @@
 #include "enemy.h"
+#include "Player.h"
 
 Enemy::~Enemy()
 {
@@ -80,16 +81,31 @@ void Enemy::Leave() {
 	}
 }
 
-void Enemy::Fire()
-{ 
-		const float kBulletSpeedZ = -1.0f;
-		Vector3 velocity(0, 0, kBulletSpeedZ);
-		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
-		EnemyBullet* newBullet = new EnemyBullet;
-		newBullet->Initialise(model_, worldTransform_.translation_, velocity);
-		bullets_.push_back(newBullet);
+void Enemy::Fire() {
+	assert(player_);
+	float kBulletSpeedX = -1.0f;
+	float kBulletSpeedY = -1.0f;
+	float kBulletSpeedZ = -1.0f;
+	player_->GetWorldPosition();
+	GetWorldPosition();
+	Vector3 direction = Subtract( player_->GetWorldPosition(),GetWorldPosition());
+	kBulletSpeedX = Normalize(direction).x;
+	kBulletSpeedY = Normalize(direction).y;
+	kBulletSpeedZ = Normalize(direction).z;
+	Vector3 velocity(kBulletSpeedX, kBulletSpeedY, kBulletSpeedZ);
+
+	EnemyBullet* newBullet = new EnemyBullet();
+	newBullet->Initialise(model_, worldTransform_.translation_, velocity);
+	bullets_.push_back(newBullet);
 }
 
 void Enemy::ResetApproach() {
-	FireTimer = 10;
+	FireTimer = 10; }
+
+Vector3 Enemy::GetWorldPosition() {
+	    Vector3 worldPos;
+	    worldPos.x = worldTransform_.translation_.x;
+	    worldPos.y = worldTransform_.translation_.y;
+	    worldPos.z = worldTransform_.translation_.z;
+	    return worldPos;
 }

@@ -26,6 +26,8 @@ public:
 
 	void Attack();
 
+	Vector3 GetWorldPosition();
+
 	/// <summary>
 	/// 
 	/// </summary>
