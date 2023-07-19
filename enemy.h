@@ -30,6 +30,8 @@ public:
 
 	Vector3 GetWorldPosition();
 
+		void OnCollition();
+
 	void SetPlayer(Player* player) { player_ = player; }
 	enum class Phase {
 		Approach,
@@ -39,6 +41,7 @@ public:
 
 	std::list<EnemyBullet*> bullets_;
 	static const int kFireInterval = 64;
+	const std::list<EnemyBullet*>& GetBullets() const { return bullets_; }
 
 private:
 	EnemyBullet* bullet_ = nullptr;

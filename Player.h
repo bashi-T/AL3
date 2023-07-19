@@ -17,16 +17,17 @@ public:
 	/// <param name="textureHandle"></param>
 	void Initialize(Model* model, uint32_t textureHandle);
 	
-	/// <summary>
-	/// 
-	/// </summary>
 	void Update();
 	
 	void Rotate();
 
 	void Attack();
 
+	void OnCollition();
+
 	Vector3 GetWorldPosition();
+
+	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
 
 	/// <summary>
 	/// 

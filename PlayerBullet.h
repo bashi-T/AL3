@@ -8,6 +8,7 @@ public:
 	void Initialise(Model* model, const Vector3& position, const Vector3& velocity);
 	void Update();
 	void Draw(const ViewProjection& viewProjection);
+	void OnCollition();
 	Vector3 velocity_;
 	bool IsDead()const { return isDead_; }
 
