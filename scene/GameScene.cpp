@@ -10,6 +10,7 @@ GameScene::~GameScene() {
 	delete player_;
 	delete debugCamera_;
 	delete enemy_;
+	delete modelSkydome_;
 }
 
 void GameScene::Initialize()
@@ -19,15 +20,18 @@ void GameScene::Initialize()
 	audio_ = Audio::GetInstance();
 
 
-	textureHandle_ = TextureManager::Load("worldmap.png");
+	textureHandle_ = TextureManager::Load("uvChecker.png");
 	model_ = Model::Create();
 	viewProjection_.Initialize();
+	modelSkydome_ = Model::CreateFromOBJ("world", true);
 
 	player_ = new Player();
 	player_->Initialize(model_, textureHandle_);
 	enemy_ = new Enemy();
 	enemy_->SetPlayer(player_);
 	enemy_->Initialise(model_);
+	skydome_ = new Skydome();
+	skydome_->Initialize(modelSkydome_);
 
 	debugCamera_ = new DebugCamera(640, 360);
 
@@ -42,6 +46,7 @@ void GameScene::Update()
 	player_->Rotate();
 	debugCamera_->Update();
 	enemy_->Update();
+	skydome_->Update();
 	CheckAllCollitions();
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_S))
@@ -88,7 +93,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-
+	skydome_->Draw(viewProjection_);
 	player_->Draw(viewProjection_);
 	enemy_->Draw(viewProjection_);
 
