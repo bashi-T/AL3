@@ -59,9 +59,6 @@ void Player::Update(){
 	ImGui::InputFloat3("InputFloat3",inputFloat3);
 	ImGui::End();
 
-	const float kMoveLimitX = 33;
-	const float kMoveLimitY = 18;
-
 	worldTransform_.translation_.x = max(worldTransform_.translation_.x, -kMoveLimitX);
 	worldTransform_.translation_.x = min(worldTransform_.translation_.x, +kMoveLimitX);
 	worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
@@ -86,12 +83,18 @@ void Player::Rotate()
 void Player::Attack()
 {
 	if (input_->PushKey(DIK_SPACE)) {
-		const float kBulletSpeedZ = 1.0f;
-		Vector3 velocity(0, 0, kBulletSpeedZ);
-		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
-		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialise(model_, worldTransform_.translation_, velocity);
-		bullets_.push_back(newBullet);
+		FireTimer--;
+		if (FireTimer == 0) {
+			FireTimer = 10;
+			const float kBulletSpeedZ = 1.0f;
+			Vector3 velocity(0, 0, kBulletSpeedZ);
+			velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+			PlayerBullet* newBullet = new PlayerBullet();
+			newBullet->Initialise(model_, worldTransform_.translation_, velocity);
+			bullets_.push_back(newBullet);
+		}
+	} else {
+		FireTimer = 1;
 	}
 }
 void Player::OnCollition() {}
