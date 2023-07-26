@@ -47,6 +47,8 @@ void Player::Update(){
 	worldTransform_.translation_.y += move.y;
 	worldTransform_.translation_.z += move.z;
 
+	Rotate();
+
 	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_,
 		worldTransform_.rotation_, worldTransform_.translation_);
 
@@ -76,10 +78,10 @@ void Player::Update(){
 void Player::Rotate()
 {
 	const float kRotSpeed = 0.02f;
-	if (input_->PushKey(DIK_A)) {
+	if (input_->PushKey(DIK_Q)) {
 		worldTransform_.rotation_.y -= kRotSpeed;
 	}
-	if (input_->PushKey(DIK_D)) {
+	if (input_->PushKey(DIK_R)) {
 		worldTransform_.rotation_.y += kRotSpeed;
 	}
 }

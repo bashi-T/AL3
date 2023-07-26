@@ -39,10 +39,10 @@ void GameScene::Initialize()
 void GameScene::Update()
 {
 	player_->Update();
-	player_->Rotate();
-	debugCamera_->Update();
 	enemy_->Update();
 	CheckAllCollitions();
+	debugCamera_->Update();
+
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_S))
 	{
