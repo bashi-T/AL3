@@ -1,6 +1,6 @@
 #pragma once
-#include "ViewProjection.h"
 #include "Model.h"
+#include "ViewProjection.h"
 #include "WorldTransform.h"
 #include<Input.h>
 #include"PlayerBullet.h"

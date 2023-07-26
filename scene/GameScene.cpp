@@ -32,6 +32,8 @@ void GameScene::Initialize()
 	enemy_->Initialise(model_);
 	skydome_ = new Skydome();
 	skydome_->Initialize(modelSkydome_);
+	railCamera_ = new RailCamera();
+	railCamera_->Initialize({0, 0, -10}, {0, 0, 0});
 
 	debugCamera_ = new DebugCamera(640, 360);
 
@@ -47,6 +49,7 @@ void GameScene::Update()
 	debugCamera_->Update();
 	enemy_->Update();
 	skydome_->Update();
+	railCamera_->Update();
 	CheckAllCollitions();
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_S))

@@ -6,7 +6,8 @@ Player::~Player()
 	   delete bullet;
 	}
 }
-void Player::Initialize(Model* model, uint32_t textureHandle){
+void Player::Initialize(Model* model, uint32_t textureHandle)
+{
 	assert(model);
 
 	model_ = model;
