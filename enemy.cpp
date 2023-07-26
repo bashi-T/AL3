@@ -14,7 +14,7 @@ void Enemy::Initialise(Model* model) {
 	textureHandle_ = TextureManager::Load("sand.png");
 	worldTransform_.Initialize();
 	input_ = Input::GetInstance();
-	worldTransform_.translation_ = {0, 5, 100};
+	worldTransform_.translation_ = {0, 10, 100};
 	ResetApproach();
 }
 
