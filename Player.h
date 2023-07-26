@@ -43,5 +43,6 @@ private:
 	Model* model_ = nullptr;
 	uint32_t textureHandle_ = 0u;
 	Input* input_ = nullptr;
-	float inputFloat3[3] = { 0,0,0 };
+	int32_t FireTimer = 1;
+	float inputFloat3[3] = {0, 0, 0};
 };
