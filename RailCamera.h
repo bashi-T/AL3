@@ -3,6 +3,7 @@
 #include "WorldTransform.h"
 #include"ALVector.h"
 #include<Input.h>
+#include"ImGuiManager.h"
 
 class RailCamera {
 public:

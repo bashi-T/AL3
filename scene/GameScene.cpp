@@ -45,10 +45,9 @@ void GameScene::Initialize()
 void GameScene::Update()
 {
 	player_->Update();
-	player_->Rotate();
-	debugCamera_->Update();
 	enemy_->Update();
 	skydome_->Update();
+	debugCamera_->Update();
 	railCamera_->Update();
 	CheckAllCollitions();
 #ifdef _DEBUG

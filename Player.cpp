@@ -16,7 +16,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle)
 	worldTransform_.Initialize();
 };
 
-void Player::Update(){
+void Player::Update() {
 	bullets_.remove_if([](PlayerBullet* bullet) {
 		if (bullet->IsDead()) {
 			delete bullet;
@@ -27,29 +27,33 @@ void Player::Update(){
 
 	worldTransform_.UpdateMatrix();
 
-	Vector3 move = { 0,0,0 };
+	Vector3 move = {0, 0, 0};
 	const float kCharacterSpeed = 0.4f;
 
 	if (input_->PushKey(DIK_LEFT)) {
-		move.x -= kCharacterSpeed;
+	   move.x -= kCharacterSpeed;
 	}
 	if (input_->PushKey(DIK_RIGHT)) {
-		move.x += kCharacterSpeed;
+	   move.x += kCharacterSpeed;
 	}
 
 	if (input_->PushKey(DIK_UP)) {
-		move.y += kCharacterSpeed;
+	   move.y += kCharacterSpeed;
 	}
 	if (input_->PushKey(DIK_DOWN)) {
-		move.y -= kCharacterSpeed;
+	   move.y -= kCharacterSpeed;
 	}
 
 	worldTransform_.translation_.x += move.x;
 	worldTransform_.translation_.y += move.y;
 	worldTransform_.translation_.z += move.z;
 
-	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_,
-		worldTransform_.rotation_, worldTransform_.translation_);
+	Rotate();
+
+	worldTransform_.matWorld_ = MakeAffineMatrix(
+	    worldTransform_.scale_,
+		worldTransform_.rotation_,
+		worldTransform_.translation_);
 
 	worldTransform_.TransferMatrix();
 
@@ -57,7 +61,7 @@ void Player::Update(){
 	inputFloat3[0] = worldTransform_.translation_.x;
 	inputFloat3[1] = worldTransform_.translation_.y;
 	inputFloat3[2] = worldTransform_.translation_.z;
-	ImGui::InputFloat3("InputFloat3",inputFloat3);
+	ImGui::InputFloat3("InputFloat3", inputFloat3);
 	ImGui::End();
 
 	worldTransform_.translation_.x = max(worldTransform_.translation_.x, -kMoveLimitX);
@@ -66,18 +70,18 @@ void Player::Update(){
 	worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
 
 	Attack();
-	for (PlayerBullet* bullet:bullets_) {
-		bullet->Update();
+	for (PlayerBullet* bullet : bullets_) {
+	   bullet->Update();
 	}
 }
 
 void Player::Rotate()
 {
 	const float kRotSpeed = 0.02f;
-	if (input_->PushKey(DIK_A)) {
+	if (input_->PushKey(DIK_Q)) {
 		worldTransform_.rotation_.y -= kRotSpeed;
 	}
-	if (input_->PushKey(DIK_D)) {
+	if (input_->PushKey(DIK_R)) {
 		worldTransform_.rotation_.y += kRotSpeed;
 	}
 }
