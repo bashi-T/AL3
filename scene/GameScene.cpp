@@ -53,7 +53,8 @@ void GameScene::Update()
 	if (isDebugCameraActive_) {
 		debugCamera_->Update();
 		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+		viewProjection_.matProjection = debugCamera_->
+			GetViewProjection().matProjection;
 		viewProjection_.TransferMatrix();
 	}
 	else 
@@ -123,7 +124,7 @@ void GameScene::CheckAllCollitions()
 		Vector3 distance = Subtract(posA, posB);
 		if ((distance.x * distance.x) + (distance.y * distance.y) +
 			(distance.z * distance.z) <= 4)
-		    {
+		{
 			player_->OnCollition();
 			bullet->OnCollition();
 		}
@@ -136,22 +137,26 @@ void GameScene::CheckAllCollitions()
 	{
 		posB = bullet->GetWorldPosition();
 		Vector3 distance = Subtract(posA, posB);
-		if ((distance.x * distance.x) + (distance.y * distance.y) + (distance.z * distance.z) <=
-		    4) {
+		if ((distance.x * distance.x) + (distance.y * distance.y) + 
+			(distance.z * distance.z) <= 4)
+		{
 			player_->OnCollition();
 			bullet->OnCollition();
-		}
+		};
 	}
 #pragma endregion
 
 #pragma region
-	for (PlayerBullet* PlayerBullet : playerBullets) {
-		for (EnemyBullet* EnemyBullet : enemyBullets) {
+	for (PlayerBullet* PlayerBullet : playerBullets)
+	{
+		for (EnemyBullet* EnemyBullet : enemyBullets) 
+		{
 			posA = PlayerBullet->GetWorldPosition();
 			posB = EnemyBullet->GetWorldPosition();
 			Vector3 distance = Subtract(posA, posB);
-			if ((distance.x * distance.x) + (distance.y * distance.y) + (distance.z * distance.z) <=
-			    4) {
+			if ((distance.x * distance.x) + (distance.y * distance.y) + 
+				(distance.z * distance.z) <= 4)
+			{
 				PlayerBullet->OnCollition();
 				EnemyBullet->OnCollition();
 			}
