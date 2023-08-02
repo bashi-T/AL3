@@ -11,6 +11,7 @@ GameScene::~GameScene() {
 	delete debugCamera_;
 	delete enemy_;
 	delete modelSkydome_;
+	delete railCamera_;
 }
 
 void GameScene::Initialize()
@@ -19,27 +20,28 @@ void GameScene::Initialize()
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-
 	textureHandle_ = TextureManager::Load("uvChecker.png");
 	model_ = Model::Create();
 	viewProjection_.Initialize();
 	modelSkydome_ = Model::CreateFromOBJ("world", true);
 
 	player_ = new Player();
-	player_->Initialize(model_, textureHandle_);
+	Vector3 playerPosition(0, 0, 20);
+	player_->Initialize(model_, textureHandle_, playerPosition);
+	
 	enemy_ = new Enemy();
 	enemy_->SetPlayer(player_);
 	enemy_->Initialise(model_);
 	skydome_ = new Skydome();
 	skydome_->Initialize(modelSkydome_);
 	railCamera_ = new RailCamera();
-	railCamera_->Initialize({0, 0, -10}, {0, 0, 0});
+	railCamera_->Initialize({0, 0, -30}, {0, 0, 0});
+	player_->SetParent(&railCamera_->GetWorldTransform());
 
 	debugCamera_ = new DebugCamera(640, 360);
 
 	AxisIndicator::GetInstance()->SetVisible(true);
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
-
 }
 
 void GameScene::Update()
@@ -49,24 +51,29 @@ void GameScene::Update()
 	skydome_->Update();
 	debugCamera_->Update();
 	railCamera_->Update();
+	viewProjection_.matView = railCamera_->
+		GetViewProjection().matView;
+	viewProjection_.matProjection = railCamera_->
+		GetViewProjection().matProjection;
+	viewProjection_.TransferMatrix();
 	CheckAllCollitions();
-#ifdef _DEBUG
-	if (input_->TriggerKey(DIK_S))
-	{
-		isDebugCameraActive_ = true;
-	}
-#endif
+//#ifdef _DEBUG
+//	if (input_->TriggerKey(DIK_S))
+//	{
+//		isDebugCameraActive_ = true;
+//	}
+//#endif
 
-	if (isDebugCameraActive_) {
-		debugCamera_->Update();
-		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-		viewProjection_.TransferMatrix();
-	}
-	else 
-	{
-		viewProjection_.UpdateMatrix();
-	}
+	//if (isDebugCameraActive_) {
+	//	debugCamera_->Update();
+	//	viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+	//	viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+	//	viewProjection_.TransferMatrix();
+	//}
+	//else 
+	//{
+	//	viewProjection_.UpdateMatrix();
+	//}
 }
 
 void GameScene::Draw() {
@@ -130,7 +137,7 @@ void GameScene::CheckAllCollitions()
 		Vector3 distance = Subtract(posA, posB);
 		if ((distance.x * distance.x) + (distance.y * distance.y) +
 			(distance.z * distance.z) <= 4)
-		    {
+		{
 			player_->OnCollition();
 			bullet->OnCollition();
 		}
@@ -143,8 +150,9 @@ void GameScene::CheckAllCollitions()
 	{
 		posB = bullet->GetWorldPosition();
 		Vector3 distance = Subtract(posA, posB);
-		if ((distance.x * distance.x) + (distance.y * distance.y) + (distance.z * distance.z) <=
-		    4) {
+		if ((distance.x * distance.x) + (distance.y * distance.y) +
+			(distance.z * distance.z) <= 4)
+		{
 			player_->OnCollition();
 			bullet->OnCollition();
 		}
@@ -157,8 +165,9 @@ void GameScene::CheckAllCollitions()
 			posA = PlayerBullet->GetWorldPosition();
 			posB = EnemyBullet->GetWorldPosition();
 			Vector3 distance = Subtract(posA, posB);
-			if ((distance.x * distance.x) + (distance.y * distance.y) + (distance.z * distance.z) <=
-			    4) {
+			if ((distance.x * distance.x) + (distance.y * distance.y) +
+				(distance.z * distance.z) <= 4)
+			{
 				PlayerBullet->OnCollition();
 				EnemyBullet->OnCollition();
 			}

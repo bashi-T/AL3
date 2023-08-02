@@ -6,14 +6,14 @@ Player::~Player()
 	   delete bullet;
 	}
 }
-void Player::Initialize(Model* model, uint32_t textureHandle)
-{
+void Player::Initialize(Model* model, uint32_t textureHandle,Vector3 playerPosition) {
 	assert(model);
 
 	model_ = model;
 	textureHandle_ = textureHandle;
 	input_ = Input::GetInstance();
 	worldTransform_.Initialize();
+	worldTransform_.translation_ = playerPosition;
 };
 
 void Player::Update() {
@@ -103,6 +103,11 @@ void Player::Attack()
 	}
 }
 void Player::OnCollition() {}
+
+void Player::SetParent(const WorldTransform* parent)
+{
+	worldTransform_.parent_ = parent;
+}
 
 Vector3 Player::GetWorldPosition()
 {

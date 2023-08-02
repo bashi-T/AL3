@@ -15,7 +15,7 @@ public:
 	/// </summary>
 	/// <param name="model"></param>
 	/// <param name="textureHandle"></param>
-	void Initialize(Model* model, uint32_t textureHandle);
+	void Initialize(Model* model, uint32_t textureHandle, Vector3 playerPosition);
 	
 	void Update();
 	
@@ -24,6 +24,8 @@ public:
 	void Attack();
 
 	void OnCollition();
+
+	void SetParent(const WorldTransform* parent);
 
 	Vector3 GetWorldPosition();
 
