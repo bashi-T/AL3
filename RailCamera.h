@@ -12,7 +12,10 @@ public:
 	void Update();
 
 	const ViewProjection& GetViewProjection() { return viewProjection_; }
-	const WorldTransform& GetWorldTransform() { return worldTransform_; }
+	const WorldTransform& GetWorldTransform() const { return worldTransform_; }
+
+	// const std::list<WorldTransform*>& GetWorldTransform() const { return WorldTransform_; }
+	//std::list<WorldTransform*> WorldTransform_;
 
 private:
 	WorldTransform worldTransform_;

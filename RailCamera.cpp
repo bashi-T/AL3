@@ -10,7 +10,6 @@ void RailCamera::Initialize(Vector3 translate, Vector3 radian) {
 
 void RailCamera::Update()
 {
-	//worldTransform_.UpdateMatrix();
 	Vector3 move = {0, 0, 0};
 	Vector3 rotate = {0, 0, 0};
 	const float kCameraSpeed = 0.4f;
