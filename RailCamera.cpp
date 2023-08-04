@@ -1,7 +1,12 @@
 #include "RailCamera.h"
 
-void RailCamera::Initialize(Vector3 translate, Vector3 radian) {
+void RailCamera::Initialize(Vector3 translate, Vector3 radian)
+{
+	worldTransform_.Initialize();
 	worldTransform_.translation_ = translate;
+	worldTransform_.matWorld_.m[3][0] = translate.x;
+	worldTransform_.matWorld_.m[3][1] = translate.y;
+	worldTransform_.matWorld_.m[3][2] = translate.z;
 	worldTransform_.rotation_ = radian;
 	input_ = Input::GetInstance();
 	viewProjection_.farZ = 1000.0f;
@@ -10,70 +15,9 @@ void RailCamera::Initialize(Vector3 translate, Vector3 radian) {
 
 void RailCamera::Update()
 {
-	Vector3 move = {0, 0, 0};
-	Vector3 rotate = {0, 0, 0};
-	const float kCameraSpeed = 0.4f;
+	Translate();
+	Rotate();
 
-	if (input_->PushKey(DIK_H))
-	{
-		move.x += kCameraSpeed;
-	}
-	if (input_->PushKey(DIK_F))
-	{
-		move.x -= kCameraSpeed;
-	}
-	if (input_->PushKey(DIK_T))
-	{
-		move.y += kCameraSpeed;
-	}
-	if (input_->PushKey(DIK_B))
-	{
-		move.y -= kCameraSpeed;
-	}
-	if (input_->PushKey(DIK_Y))
-	{
-		move.z += kCameraSpeed;
-	}
-	if (input_->PushKey(DIK_V))
-	{
-		move.z -= kCameraSpeed;
-	}
-
-	worldTransform_.translation_.x += move.x;
-	worldTransform_.translation_.y += move.y;
-	worldTransform_.translation_.z += move.z;
-
-	const float kRotSpeed = 0.02f;
-
-	if (input_->PushKey(DIK_D))
-	{
-		rotate.y += kRotSpeed;
-	}
-	if (input_->PushKey(DIK_A))
-	{
-		rotate.y -= kRotSpeed;
-	}
-	if (input_->PushKey(DIK_W))
-	{
-		rotate.x += kRotSpeed;
-	}
-	if (input_->PushKey(DIK_X))
-	{
-		rotate.x -= kRotSpeed;
-	}
-	if (input_->PushKey(DIK_E))
-	{
-		rotate.z += kRotSpeed;
-	}
-	if (input_->PushKey(DIK_Z))
-	{
-		rotate.z -= kRotSpeed;
-	}
-
-	worldTransform_.rotation_.x += rotate.x;
-	worldTransform_.rotation_.y += rotate.y;
-	worldTransform_.rotation_.z += rotate.z;
-	
 	worldTransform_.matWorld_ = MakeAffineMatrix(
 	    worldTransform_.scale_,
 		worldTransform_.rotation_,
@@ -81,11 +25,11 @@ void RailCamera::Update()
 
 	viewProjection_.matView = Inverse(worldTransform_.matWorld_);
 
-	float inputTranslationFloat3[3] = 
+	float inputTranslationFloat3[3] =
 	{
-	    worldTransform_.translation_.x,
-		worldTransform_.translation_.y,
-	    worldTransform_.translation_.z
+	    worldTransform_.matWorld_.m[3][0],
+		worldTransform_.matWorld_.m[3][1],
+	    worldTransform_.matWorld_.m[3][2]
 	};
 
 	float inputRotationFloat3[3] =
@@ -99,4 +43,63 @@ void RailCamera::Update()
 	ImGui::SliderFloat3("translation", inputTranslationFloat3, 0.0f, 1.0f);
 	ImGui::SliderFloat3("rotation", inputRotationFloat3, 0.0f, 1.0f);
 	ImGui::End();
+}
+
+void RailCamera::Translate()
+{
+	Vector3 move = {0, 0, 0};
+	const float kCameraSpeed = 0.4f;
+
+	if (input_->PushKey(DIK_H)) {
+		move.x += kCameraSpeed;
+	}
+	if (input_->PushKey(DIK_F)) {
+		move.x -= kCameraSpeed;
+	}
+	if (input_->PushKey(DIK_T)) {
+		move.y += kCameraSpeed;
+	}
+	if (input_->PushKey(DIK_B)) {
+		move.y -= kCameraSpeed;
+	}
+	if (input_->PushKey(DIK_Y)) {
+		move.z += kCameraSpeed;
+	}
+	if (input_->PushKey(DIK_V)) {
+		move.z -= kCameraSpeed;
+	}
+
+	worldTransform_.translation_.x += move.x;
+	worldTransform_.translation_.y += move.y;
+	worldTransform_.translation_.z += move.z;
+}
+
+void RailCamera::Rotate()
+{
+	Vector3 rotate = {0, 0, 0};
+
+	const float kRotSpeed = 0.02f;
+
+	if (input_->PushKey(DIK_D)) {
+		rotate.y += kRotSpeed;
+	}
+	if (input_->PushKey(DIK_A)) {
+		rotate.y -= kRotSpeed;
+	}
+	if (input_->PushKey(DIK_W)) {
+		rotate.x += kRotSpeed;
+	}
+	if (input_->PushKey(DIK_X)) {
+		rotate.x -= kRotSpeed;
+	}
+	if (input_->PushKey(DIK_E)) {
+		rotate.z += kRotSpeed;
+	}
+	if (input_->PushKey(DIK_Z)) {
+		rotate.z -= kRotSpeed;
+	}
+
+	worldTransform_.rotation_.x += rotate.x;
+	worldTransform_.rotation_.y += rotate.y;
+	worldTransform_.rotation_.z += rotate.z;
 }

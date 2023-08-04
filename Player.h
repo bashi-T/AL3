@@ -6,7 +6,7 @@
 #include"PlayerBullet.h"
 #include"list"
 #include"ImGuiManager.h"
-
+#include"RailCamera.h"
 class Player {
 public:
 	~Player();
@@ -19,6 +19,8 @@ public:
 	
 	void Update();
 	
+	void Translate();
+
 	void Rotate();
 
 	void Attack();
@@ -28,7 +30,7 @@ public:
 	void SetParent(const WorldTransform* parent);
 
 	Vector3 GetWorldPosition();
-
+	WorldTransform GetWorldTransform() { return worldTransform_; }
 	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
 
 	/// <summary>
@@ -41,12 +43,14 @@ public:
 
 private:
 	PlayerBullet* bullet_ = nullptr;
+	RailCamera* railCamera_ = nullptr;
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
 	uint32_t textureHandle_ = 0u;
 	Input* input_ = nullptr;
 	int32_t FireTimer = 1;
-	float inputFloat3[3] = {0, 0, 0};
+	float inputWorld3[3] = {0, 0, 0};
+	float inputtranslate3[3] = {0, 0, 0};
 	const float kMoveLimitX = 33;
 	const float kMoveLimitY = 18;
 };

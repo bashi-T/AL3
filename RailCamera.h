@@ -7,9 +7,14 @@
 
 class RailCamera {
 public:
-	void Initialize(Vector3 translate,Vector3 radian);
+	void Initialize(Vector3 translate, Vector3 radian);
 
 	void Update();
+
+	void Translate();
+
+	void Rotate();
+
 
 	const ViewProjection& GetViewProjection() { return viewProjection_; }
 	const WorldTransform& GetWorldTransform() const { return worldTransform_; }

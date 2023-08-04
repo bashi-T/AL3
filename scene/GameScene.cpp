@@ -26,8 +26,7 @@ void GameScene::Initialize()
 	modelSkydome_ = Model::CreateFromOBJ("world", true);
 
 	player_ = new Player();
-	Vector3 playerPosition(0, 0, 20);
-	player_->Initialize(model_, textureHandle_, playerPosition);
+	Vector3 playerPosition(0, 0, 30);
 	
 	enemy_ = new Enemy();
 	enemy_->SetPlayer(player_);
@@ -39,8 +38,9 @@ void GameScene::Initialize()
 	railCamera_ = new RailCamera();
 	railCamera_->Initialize({0, 0, -30}, {0, 0, 0});
 	player_->SetParent(&railCamera_->GetWorldTransform());
+	player_->Initialize(model_, textureHandle_, playerPosition);
 
-	debugCamera_ = new DebugCamera(640, 360);
+	//debugCamera_ = new DebugCamera(640, 360);
 
 	AxisIndicator::GetInstance()->SetVisible(true);
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
@@ -48,18 +48,21 @@ void GameScene::Initialize()
 
 void GameScene::Update()
 {
+	railCamera_->Update();
+
+	viewProjection_.matView = railCamera_->
+		GetViewProjection().matView;
+
+	viewProjection_.matProjection = railCamera_->
+		GetViewProjection().matProjection;
+
+	viewProjection_.TransferMatrix();
 	player_->Update();
 	enemy_->Update();
 	skydome_->Update();
-	//debugCamera_->Update();
 
-	railCamera_->Update();
-	viewProjection_.matView = railCamera_->
-		GetViewProjection().matView;
-	viewProjection_.matProjection = railCamera_->
-		GetViewProjection().matProjection;
-	viewProjection_.TransferMatrix();
 	CheckAllCollitions();
+	//debugCamera_->Update();
 //#ifdef _DEBUG
 //	if (input_->TriggerKey(DIK_S))
 //	{

@@ -1,12 +1,17 @@
 #include "PlayerBullet.h"
 
-void PlayerBullet::Initialise(Model* model, const Vector3& position, const Vector3& velocity)
+void PlayerBullet::Initialise(Model* model, const Matrix4x4& position, const Vector3& velocity)
 {
 	assert(model);
 	model_ = model;
 	textureHandle_ = TextureManager::Load("glass.png");
 	worldTransform_.Initialize();
-	worldTransform_.translation_ = { position.x,position.y,position.z };
+	worldTransform_.translation_ =
+	{
+		position.m[3][0],
+		position.m[3][1],
+		position.m[3][2]
+	};
 	velocity_ = velocity;
 }
 

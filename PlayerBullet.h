@@ -5,7 +5,7 @@
 class PlayerBullet
 {
 public:
-	void Initialise(Model* model, const Vector3& position, const Vector3& velocity);
+	void Initialise(Model* model, const Matrix4x4& position, const Vector3& velocity);
 	void Update();
 	void Draw(const ViewProjection& viewProjection);
 	void OnCollition();
