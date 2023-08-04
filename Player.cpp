@@ -41,21 +41,21 @@ void Player::Update() {
 	inputWorld3[0] = worldTransform_.matWorld_.m[3][0];
 	inputWorld3[1] = worldTransform_.matWorld_.m[3][1];
 	inputWorld3[2] = worldTransform_.matWorld_.m[3][2];
-	ImGui::InputFloat3("InputFloat3", inputWorld3);
+	ImGui::InputFloat3("world", inputWorld3);
 	inputtranslate3[0] = worldTransform_.translation_.x;
 	inputtranslate3[1] = worldTransform_.translation_.y;
 	inputtranslate3[2] = worldTransform_.translation_.z;
-	ImGui::InputFloat3("InputFloat3", inputtranslate3);
+	ImGui::InputFloat3("translation", inputtranslate3);
 	ImGui::End();
 
-	//worldTransform_.matWorld_.m[3][0] =
-	//    max(worldTransform_.parent_->matWorld_.m[3][0], -kMoveLimitX);
-	//worldTransform_.matWorld_.m[3][0] =
-	//    min(worldTransform_.parent_->matWorld_.m[3][0], +kMoveLimitX);
-	//worldTransform_.matWorld_.m[3][1] =
-	//	max(worldTransform_.parent_->matWorld_.m[3][1], -kMoveLimitY);
-	//worldTransform_.matWorld_.m[3][1] =
-	//	min(worldTransform_.parent_->matWorld_.m[3][1], +kMoveLimitY);
+	worldTransform_.matWorld_.m[3][0] =
+	    max(worldTransform_.matWorld_.m[3][0], -kMoveLimitX);
+	worldTransform_.matWorld_.m[3][0] =
+	    min(worldTransform_.matWorld_.m[3][0], +kMoveLimitX);
+	worldTransform_.matWorld_.m[3][1] =
+		max(worldTransform_.matWorld_.m[3][1], -kMoveLimitY);
+	worldTransform_.matWorld_.m[3][1] =
+		min(worldTransform_.matWorld_.m[3][1], +kMoveLimitY);
 
 	Attack();
 	for (PlayerBullet* bullet : bullets_) {

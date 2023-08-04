@@ -76,7 +76,8 @@ void Enemy::Leave() {
 	worldTransform_.translation_.x += kEnemySpeedX;
 	worldTransform_.translation_.y += kEnemySpeedY;
 	worldTransform_.translation_.z += kEnemySpeedZ;
-	if (worldTransform_.translation_.z > 120.0f) {
+	if (worldTransform_.translation_.z > 120.0f)
+	{
 		phase_ = Phase::Approach;
 	}
 }
@@ -99,8 +100,10 @@ void Enemy::Fire() {
 	bullets_.push_back(newBullet);
 }
 
-void Enemy::ResetApproach() {
-	FireTimer = 10; }
+void Enemy::ResetApproach()
+{
+	FireTimer = 10;
+}
 
 Vector3 Enemy::GetWorldPosition() {
 	Vector3 worldPos;

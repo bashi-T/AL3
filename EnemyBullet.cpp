@@ -6,6 +6,9 @@ void EnemyBullet::Initialise(Model* model, const Vector3& position, const Vector
 	textureHandle_ = TextureManager::Load("ganban.png");
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = {position.x, position.y, position.z};
+	worldTransform_.matWorld_.m[3][0] = position.x;
+	worldTransform_.matWorld_.m[3][1] = position.y;
+	worldTransform_.matWorld_.m[3][2] = position.z;
 	velocity_ = velocity;
 }
 

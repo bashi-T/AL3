@@ -40,7 +40,7 @@ void RailCamera::Update()
 	};
 
 	ImGui::Begin("Camera");
-	ImGui::SliderFloat3("translation", inputTranslationFloat3, 0.0f, 1.0f);
+	ImGui::SliderFloat3("world", inputTranslationFloat3, 0.0f, 1.0f);
 	ImGui::SliderFloat3("rotation", inputRotationFloat3, 0.0f, 1.0f);
 	ImGui::End();
 }
