@@ -41,6 +41,9 @@ public:
 
 	std::list<PlayerBullet*>bullets_;
 
+	const float kMoveLimitX = 33;
+	const float kMoveLimitY = 18;
+
 private:
 	PlayerBullet* bullet_ = nullptr;
 	RailCamera* railCamera_ = nullptr;
@@ -51,6 +54,4 @@ private:
 	int32_t FireTimer = 1;
 	float inputWorld3[3] = {0, 0, 0};
 	float inputtranslate3[3] = {0, 0, 0};
-	const float kMoveLimitX = 33;
-	const float kMoveLimitY = 18;
 };

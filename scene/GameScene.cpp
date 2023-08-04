@@ -62,6 +62,7 @@ void GameScene::Update()
 	skydome_->Update();
 
 	CheckAllCollitions();
+
 	//debugCamera_->Update();
 //#ifdef _DEBUG
 //	if (input_->TriggerKey(DIK_S))

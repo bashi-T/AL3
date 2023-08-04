@@ -48,14 +48,14 @@ void Player::Update() {
 	ImGui::InputFloat3("InputFloat3", inputtranslate3);
 	ImGui::End();
 
-	//worldTransform_.translation_.x =
-	//    max(railCamera_->GetWorldTransform().matWorld_.m[3][0], -kMoveLimitX);
-	//worldTransform_.translation_.x =
-	//	min(railCamera_->GetWorldTransform().matWorld_.m[3][0], +kMoveLimitX);
-	//worldTransform_.translation_.y =
-	//	max(railCamera_->GetWorldTransform().matWorld_.m[3][1], -kMoveLimitY);
-	//worldTransform_.translation_.y =
-	//	min(railCamera_->GetWorldTransform().matWorld_.m[3][1], +kMoveLimitY);
+	//worldTransform_.matWorld_.m[3][0] =
+	//    max(worldTransform_.parent_->matWorld_.m[3][0], -kMoveLimitX);
+	//worldTransform_.matWorld_.m[3][0] =
+	//    min(worldTransform_.parent_->matWorld_.m[3][0], +kMoveLimitX);
+	//worldTransform_.matWorld_.m[3][1] =
+	//	max(worldTransform_.parent_->matWorld_.m[3][1], -kMoveLimitY);
+	//worldTransform_.matWorld_.m[3][1] =
+	//	min(worldTransform_.parent_->matWorld_.m[3][1], +kMoveLimitY);
 
 	Attack();
 	for (PlayerBullet* bullet : bullets_) {
@@ -87,7 +87,7 @@ void Player::Translate()
 
 	worldTransform_.translation_.x += move.x;
 	worldTransform_.translation_.y += move.y;
-	worldTransform_.translation_.z += move.z;
+	//worldTransform_.translation_.z += move.z;
 }
 
 void Player::Rotate()
@@ -130,9 +130,9 @@ void Player::OnCollition()
 
 }
 
-void Player::SetParent(const WorldTransform* parentmatWorld)
+void Player::SetParent(const WorldTransform* parent)
 {
-	worldTransform_.parent_ = parentmatWorld;
+	worldTransform_.parent_ = parent;
 }
 
 Vector3 Player::GetWorldPosition()
