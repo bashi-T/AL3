@@ -31,6 +31,7 @@ void GameScene::Initialize()
 	enemy_ = new Enemy();
 	enemy_->SetPlayer(player_);
 	enemy_->Initialise(model_);
+	enemy_->SetGameScene(this);
 
 	skydome_ = new Skydome();
 	skydome_->Initialize(modelSkydome_);
@@ -183,4 +184,9 @@ void GameScene::CheckAllCollitions()
 		}
 	}
 #pragma endregion
+}
+
+void GameScene::AddEnemyBullet(EnemyBullet* enemyBullet)
+{
+	enemyBullets_.push_back(enemyBullet);
 }

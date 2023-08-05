@@ -8,7 +8,7 @@
 #include"EnemyBullet.h"
 
 class Player;
-
+class GameScene;
 class Enemy
 {
 public:
@@ -42,9 +42,11 @@ public:
 	std::list<EnemyBullet*> bullets_;
 	static const int kFireInterval = 64;
 	const std::list<EnemyBullet*> GetBullets() const { return bullets_; }
+	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 
 private:
 	EnemyBullet* bullet_ = nullptr;
+	GameScene* gameScene_ = nullptr;
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
 	uint32_t textureHandle_ = 0u;
