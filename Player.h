@@ -45,7 +45,6 @@ public:
 	const float kMoveLimitY = 18;
 
 private:
-	PlayerBullet* bullet_ = nullptr;
 	RailCamera* railCamera_ = nullptr;
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;

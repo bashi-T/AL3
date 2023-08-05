@@ -10,7 +10,7 @@ public:
 	void Draw(const ViewProjection& viewProjection);
 	void OnCollition();
 	Vector3 GetWorldPosition();
-	Vector3 velocity_;
+	Vector3 velocity_ = {0};
 	bool IsDead()const { return isDead_; }
 
 private:

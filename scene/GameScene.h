@@ -46,6 +46,8 @@ public: // メンバ関数
 
 	void AddEnemyBullet(EnemyBullet* enemyBullet);
 
+	void Encount();
+
 	std::list<EnemyBullet*> enemyBullets_;
 	const std::list<EnemyBullet*> GetBullets() const { return enemyBullets_; }
 	std::list<Enemy*> enemys_;
@@ -66,7 +68,7 @@ private: // メンバ変数
 	Model* model_ = nullptr;
 	ViewProjection viewProjection_;
 	Player* player_ = nullptr;
-	Enemy* enemy_ = nullptr;
+	//Enemy* enemy_ = nullptr;
 	EnemyBullet* enemyBullet_ = nullptr;
 	PlayerBullet* playerBullet_ = nullptr;
 	bool isDebugCameraActive_ = false;
@@ -74,4 +76,5 @@ private: // メンバ変数
 	Skydome* skydome_ = nullptr;
 	Model* modelSkydome_ = nullptr;
 	RailCamera* railCamera_ = nullptr;
+	int32_t EncountTimer_ = 1;
 };

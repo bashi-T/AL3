@@ -9,11 +9,14 @@ GameScene::~GameScene() {
 	delete model_;
 	delete player_;
 	delete debugCamera_;
-	delete enemy_;
+	//delete enemy_;
 	delete modelSkydome_;
 	delete railCamera_;
 	for (EnemyBullet* bullet : enemyBullets_) {
 		delete bullet;
+	}
+	for (Enemy* enemy : enemys_) {
+		delete enemy;
 	}
 }
 
@@ -31,10 +34,15 @@ void GameScene::Initialize()
 	player_ = new Player();
 	Vector3 playerPosition(0, 0, 30);
 	
-	enemy_ = new Enemy();
-	enemy_->SetPlayer(player_);
-	enemy_->SetGameScene(this);
-	enemy_->Initialise(model_);
+	//enemy_ = new Enemy();
+	//enemy_->Initialise(model_);
+
+	Enemy* newEnemy = new Enemy();
+	newEnemy->Initialise(model_);
+	enemys_.push_back(newEnemy);
+	newEnemy->SetPlayer(player_);
+	newEnemy->SetGameScene(this);
+
 
 	skydome_ = new Skydome();
 	skydome_->Initialize(modelSkydome_);
@@ -62,7 +70,31 @@ void GameScene::Update()
 
 	viewProjection_.TransferMatrix();
 	player_->Update();
-	enemy_->Update();
+	
+	//Encount();
+	enemys_.remove_if([](Enemy* enemy)
+		{
+		if (enemy->IsDead())
+		{
+			delete enemy;
+			return true;
+		}
+		return false;
+	});
+	enemyBullets_.remove_if([](EnemyBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
+	for (Enemy* enemy : enemys_) {
+		enemy->Update();
+	}
+	for (EnemyBullet* bullet : enemyBullets_) {
+		bullet->Update();
+	}
+
 	skydome_->Update();
 
 	CheckAllCollitions();
@@ -117,7 +149,12 @@ void GameScene::Draw() {
 	/// </summary>
 	skydome_->Draw(viewProjection_);
 	player_->Draw(viewProjection_);
-	enemy_->Draw(viewProjection_);
+	for (Enemy*enemy:enemys_) {
+		enemy->Draw(viewProjection_);
+	}
+	for (EnemyBullet* bullet : enemyBullets_) {
+		bullet->Draw(viewProjection_);
+	}
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -159,17 +196,17 @@ void GameScene::CheckAllCollitions()
 #pragma endregion
 
 #pragma region
-	for (PlayerBullet* bullet : playerBullets)
+	for (PlayerBullet* PlayerBullet : playerBullets)
 	{
 		for (Enemy* Enemy : enemys)
 		{
-			posA = Enemy->GetWorldPosition();
-			posB = bullet->GetWorldPosition();
+			posA = PlayerBullet->GetWorldPosition();
+			posB = Enemy->GetWorldPosition();
 			Vector3 distance = Subtract(posA, posB);
 			if ((distance.x * distance.x) + (distance.y * distance.y) +
 				(distance.z * distance.z) <= 4)
 			{
-				player_->OnCollition();
+				PlayerBullet->OnCollition();
 				Enemy->OnCollition();
 			}
 		}
@@ -177,8 +214,10 @@ void GameScene::CheckAllCollitions()
 #pragma endregion
 
 #pragma region
-	for (PlayerBullet* PlayerBullet : playerBullets) {
-		for (EnemyBullet* EnemyBullet : enemyBullets) {
+	for (PlayerBullet* PlayerBullet : playerBullets)
+	{
+		for (EnemyBullet* EnemyBullet : enemyBullets)
+		{
 			posA = PlayerBullet->GetWorldPosition();
 			posB = EnemyBullet->GetWorldPosition();
 			Vector3 distance = Subtract(posA, posB);
@@ -195,5 +234,16 @@ void GameScene::CheckAllCollitions()
 
 void GameScene::AddEnemyBullet(EnemyBullet* enemyBullet)
 {
-	enemyBullets_.push_back(enemyBullet);
+	enemyBullets_.push_back(enemyBullet); }
+
+void GameScene::Encount()
+{
+	EncountTimer_--;
+	if (EncountTimer_ == 0)
+	{
+		Enemy* newEnemy = new Enemy();
+		newEnemy->Initialise(model_);
+		enemys_.push_back(newEnemy);
+		EncountTimer_ = 120;
+	}
 }

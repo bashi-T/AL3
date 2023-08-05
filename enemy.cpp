@@ -21,13 +21,6 @@ void Enemy::Initialise(Model* model) {
 
 void Enemy::Update()
 {
-	gameScene_->enemyBullets_.remove_if([](EnemyBullet* bullet) {
-		if (bullet->IsDead()) {
-			delete bullet;
-			return true;
-		}
-		return false;
-	});
 	
 	const float kBulletSpeedZ = -0.5f;
 	Vector3 velocity(0, 0, kBulletSpeedZ);
@@ -47,17 +40,11 @@ void Enemy::Update()
 		Fire();
 		FireTimer = kFireInterval;
 	}
-	for (EnemyBullet* bullet : gameScene_->enemyBullets_) {
-		bullet->Update();
-	}
 }
 
 void Enemy::Draw(const ViewProjection& viewProjection)
 {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
-	for (EnemyBullet* bullet : gameScene_->enemyBullets_) {
-		bullet->Draw(viewProjection);
-	}
 }
 
 void Enemy::Approach() {
