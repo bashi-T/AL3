@@ -1,5 +1,6 @@
 #include "enemy.h"
 #include "Player.h"
+#include"GameScene.h"
 
 Enemy::~Enemy()
 {
@@ -12,11 +13,15 @@ void Enemy::Initialise(Model* model) {
 	worldTransform_.Initialize();
 	input_ = Input::GetInstance();
 	worldTransform_.translation_ = {0, 5, 100};
+	worldTransform_.matWorld_.m[3][0] = 0;
+	worldTransform_.matWorld_.m[3][1] = 5;
+	worldTransform_.matWorld_.m[3][2] = 100;
 	ResetApproach();
 }
 
-void Enemy::Update() {
-	enemyBullets_.remove_if([](EnemyBullet* bullet) {
+void Enemy::Update()
+{
+	gameScene_->enemyBullets_.remove_if([](EnemyBullet* bullet) {
 		if (bullet->IsDead()) {
 			delete bullet;
 			return true;
@@ -42,10 +47,7 @@ void Enemy::Update() {
 		Fire();
 		FireTimer = kFireInterval;
 	}
-	if (bullet_) {
-		bullet_->Update();
-	}
-	for (EnemyBullet* bullet : bullets_) {
+	for (EnemyBullet* bullet : gameScene_->enemyBullets_) {
 		bullet->Update();
 	}
 }
@@ -53,7 +55,7 @@ void Enemy::Update() {
 void Enemy::Draw(const ViewProjection& viewProjection)
 {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
-	for (EnemyBullet* bullet : enemyBullets_) {
+	for (EnemyBullet* bullet : gameScene_->enemyBullets_) {
 		bullet->Draw(viewProjection);
 	}
 }
@@ -112,4 +114,4 @@ Vector3 Enemy::GetWorldPosition() {
 	return worldPos;
 }
 
-void Enemy::OnCollition() {}
+void Enemy::OnCollition() { isDead_ = true; }

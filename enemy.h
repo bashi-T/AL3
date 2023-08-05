@@ -41,9 +41,10 @@ public:
 	static const int kFireInterval = 64;
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 	void SetPlayer(Player* player) { player_ = player; }
+	bool IsDead() const { return isDead_; }
 
 private:
-	EnemyBullet* bullet_ = nullptr;
+	//EnemyBullet* bullet_ = nullptr;
 	GameScene* gameScene_ = nullptr;
 	Player* player_ = nullptr;
 	WorldTransform worldTransform_;
@@ -54,5 +55,6 @@ private:
 	float kEnemySpeedX = 0.0f;
 	float kEnemySpeedY = 0.0f;
 	float kEnemySpeedZ = 0.0f;
+	bool isDead_ = false;
 };
 
