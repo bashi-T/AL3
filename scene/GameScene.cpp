@@ -12,6 +12,9 @@ GameScene::~GameScene() {
 	delete enemy_;
 	delete modelSkydome_;
 	delete railCamera_;
+	for (EnemyBullet* bullet : enemyBullets_) {
+		delete bullet;
+	}
 }
 
 void GameScene::Initialize()
@@ -30,8 +33,8 @@ void GameScene::Initialize()
 	
 	enemy_ = new Enemy();
 	enemy_->SetPlayer(player_);
-	enemy_->Initialise(model_);
 	enemy_->SetGameScene(this);
+	enemy_->Initialise(model_);
 
 	skydome_ = new Skydome();
 	skydome_->Initialize(modelSkydome_);
@@ -138,7 +141,8 @@ void GameScene::CheckAllCollitions()
 {
 	Vector3 posA, posB;
 	const std::list<PlayerBullet*>& playerBullets = player_->GetBullets();
-	const std::list<EnemyBullet*>& enemyBullets = enemy_->GetBullets();
+	const std::list<Enemy*>& enemys = GetEnemys();
+	const std::list<EnemyBullet*>& enemyBullets = GetBullets();
 #pragma region
 	posA = player_->GetWorldPosition();
 	for (EnemyBullet* bullet : enemyBullets)
@@ -155,16 +159,19 @@ void GameScene::CheckAllCollitions()
 #pragma endregion
 
 #pragma region
-	posA = enemy_->GetWorldPosition();
 	for (PlayerBullet* bullet : playerBullets)
 	{
-		posB = bullet->GetWorldPosition();
-		Vector3 distance = Subtract(posA, posB);
-		if ((distance.x * distance.x) + (distance.y * distance.y) +
-			(distance.z * distance.z) <= 4)
+		for (Enemy* Enemy : enemys)
 		{
-			player_->OnCollition();
-			bullet->OnCollition();
+			posA = Enemy->GetWorldPosition();
+			posB = bullet->GetWorldPosition();
+			Vector3 distance = Subtract(posA, posB);
+			if ((distance.x * distance.x) + (distance.y * distance.y) +
+				(distance.z * distance.z) <= 4)
+			{
+				player_->OnCollition();
+				Enemy->OnCollition();
+			}
 		}
 	}
 #pragma endregion

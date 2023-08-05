@@ -32,25 +32,23 @@ public:
 
 		void OnCollition();
 
-	void SetPlayer(Player* player) { player_ = player; }
 	enum class Phase {
 		Approach,
 		Leave,
 	};
 	Phase phase_ = Phase::Approach;
 
-	std::list<EnemyBullet*> bullets_;
 	static const int kFireInterval = 64;
-	const std::list<EnemyBullet*> GetBullets() const { return bullets_; }
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
+	void SetPlayer(Player* player) { player_ = player; }
 
 private:
 	EnemyBullet* bullet_ = nullptr;
 	GameScene* gameScene_ = nullptr;
+	Player* player_ = nullptr;
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
 	uint32_t textureHandle_ = 0u;
-	Player* player_ = nullptr;
 	Input* input_ = nullptr;
 	int32_t FireTimer = 1;
 	float kEnemySpeedX = 0.0f;

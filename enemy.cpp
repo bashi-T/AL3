@@ -3,9 +3,6 @@
 
 Enemy::~Enemy()
 {
-	for (EnemyBullet* bullet : bullets_) {
-		delete bullet;
-	}
 }
 
 void Enemy::Initialise(Model* model) {
@@ -19,7 +16,7 @@ void Enemy::Initialise(Model* model) {
 }
 
 void Enemy::Update() {
-	bullets_.remove_if([](EnemyBullet* bullet) {
+	enemyBullets_.remove_if([](EnemyBullet* bullet) {
 		if (bullet->IsDead()) {
 			delete bullet;
 			return true;
@@ -56,7 +53,7 @@ void Enemy::Update() {
 void Enemy::Draw(const ViewProjection& viewProjection)
 {
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
-	for (EnemyBullet* bullet : bullets_) {
+	for (EnemyBullet* bullet : enemyBullets_) {
 		bullet->Draw(viewProjection);
 	}
 }
@@ -84,10 +81,12 @@ void Enemy::Leave() {
 
 void Enemy::Fire() {
 	assert(player_);
+	assert(gameScene_);
 	float kBulletSpeedX = -1.0f;
 	float kBulletSpeedY = -1.0f;
 	float kBulletSpeedZ = -1.0f;
 	player_->GetWorldPosition();
+	
 	GetWorldPosition();
 	Vector3 direction = Subtract( player_->GetWorldPosition(),GetWorldPosition());
 	kBulletSpeedX = Normalize(direction).x;
@@ -97,7 +96,7 @@ void Enemy::Fire() {
 
 	EnemyBullet* newBullet = new EnemyBullet();
 	newBullet->Initialise(model_, worldTransform_.translation_, velocity);
-	bullets_.push_back(newBullet);
+	gameScene_->enemyBullets_.push_back(newBullet);
 }
 
 void Enemy::ResetApproach()

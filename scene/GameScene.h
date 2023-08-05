@@ -46,6 +46,12 @@ public: // メンバ関数
 
 	void AddEnemyBullet(EnemyBullet* enemyBullet);
 
+	std::list<EnemyBullet*> enemyBullets_;
+	const std::list<EnemyBullet*> GetBullets() const { return enemyBullets_; }
+	std::list<Enemy*> enemys_;
+	const std::list<Enemy*> GetEnemys() const { return enemys_; }
+
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
