@@ -31,19 +31,12 @@ void GameScene::Initialize()
 	model_ = Model::Create();
 	viewProjection_.Initialize();
 	modelSkydome_ = Model::CreateFromOBJ("world", true);
-
+	TextureManager::Load("Sight.png");
 	player_ = new Player();
 	Vector3 playerPosition(0, 0, 30);
 	
 	LoadEnemyPopData();
 	
-	//Enemy* newEnemy = new Enemy();
-	//newEnemy->Initialise(model_, {0,20,100});
-	//enemys_.push_back(newEnemy);
-	//newEnemy->SetPlayer(player_);
-	//newEnemy->SetGameScene(this);
-
-
 	skydome_ = new Skydome();
 	skydome_->Initialize(modelSkydome_);
 
@@ -51,8 +44,6 @@ void GameScene::Initialize()
 	railCamera_->Initialize({0, 0, -30}, {0, 0, 0});
 	player_->SetParent(&railCamera_->GetWorldTransform());
 	player_->Initialize(model_, textureHandle_, playerPosition);
-
-	//debugCamera_ = new DebugCamera(640, 360);
 
 	AxisIndicator::GetInstance()->SetVisible(true);
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
@@ -69,7 +60,8 @@ void GameScene::Update()
 		GetViewProjection().matProjection;
 
 	viewProjection_.TransferMatrix();
-	player_->Update();
+	
+	player_->Update(viewProjection_);
 	
 UpdateEnemyPopCommands();
 
@@ -168,6 +160,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
+	player_->DrawUI();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

@@ -7,6 +7,8 @@
 #include"list"
 #include"ImGuiManager.h"
 #include"RailCamera.h"
+#include "Sprite.h"
+
 class Player {
 public:
 	~Player();
@@ -17,7 +19,7 @@ public:
 	/// <param name="textureHandle"></param>
 	void Initialize(Model* model, uint32_t textureHandle, Vector3 playerPosition);
 	
-	void Update();
+	void Update(const ViewProjection viewProjection);
 	
 	void Translate();
 
@@ -39,6 +41,8 @@ public:
 	/// <param name="viewProjection"></param>
 	void Draw(ViewProjection viewProjection);
 
+	void DrawUI();
+
 	std::list<PlayerBullet*>bullets_;
 
 	const float kMoveLimitX = 33;
@@ -56,4 +60,5 @@ private:
 	int32_t FireTimer = 1;
 	float inputWorld3[3] = {0, 0, 0};
 	float inputtranslate3[3] = {0, 0, 0};
+	Sprite* sprite2DReticle_ = nullptr;
 };
