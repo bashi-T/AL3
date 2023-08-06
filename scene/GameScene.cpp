@@ -2,6 +2,7 @@
 #include "TextureManager.h"
 #include <cassert>
 #include"AxisIndicator.h"
+#include<fstream>
 
 GameScene::GameScene() {}
 
@@ -34,14 +35,13 @@ void GameScene::Initialize()
 	player_ = new Player();
 	Vector3 playerPosition(0, 0, 30);
 	
-	//enemy_ = new Enemy();
-	//enemy_->Initialise(model_);
-
-	Enemy* newEnemy = new Enemy();
-	newEnemy->Initialise(model_);
-	enemys_.push_back(newEnemy);
-	newEnemy->SetPlayer(player_);
-	newEnemy->SetGameScene(this);
+	LoadEnemyPopData();
+	
+	//Enemy* newEnemy = new Enemy();
+	//newEnemy->Initialise(model_, {0,20,100});
+	//enemys_.push_back(newEnemy);
+	//newEnemy->SetPlayer(player_);
+	//newEnemy->SetGameScene(this);
 
 
 	skydome_ = new Skydome();
@@ -71,7 +71,8 @@ void GameScene::Update()
 	viewProjection_.TransferMatrix();
 	player_->Update();
 	
-	//Encount();
+UpdateEnemyPopCommands();
+
 	enemys_.remove_if([](Enemy* enemy)
 		{
 		if (enemy->IsDead())
@@ -234,16 +235,64 @@ void GameScene::CheckAllCollitions()
 
 void GameScene::AddEnemyBullet(EnemyBullet* enemyBullet)
 {
-	enemyBullets_.push_back(enemyBullet); }
+	enemyBullets_.push_back(enemyBullet);
+}
 
-void GameScene::Encount()
+void GameScene::Encount(Vector3 translate)
 {
-	EncountTimer_--;
-	if (EncountTimer_ == 0)
+	Enemy* newEnemy = new Enemy();
+	newEnemy->Initialise(model_, translate);
+	enemys_.push_back(newEnemy);
+	newEnemy->SetPlayer(player_);
+	newEnemy->SetGameScene(this);
+}
+
+void GameScene::LoadEnemyPopData()
+{
+	std::ifstream file;
+	file.open("Resources/enemyPop.csv");
+	assert(file.is_open());
+	enemyPopCommands << file.rdbuf();
+	file.close();
+}
+
+void GameScene::UpdateEnemyPopCommands()
+{
+	if (waitFlag)
 	{
-		Enemy* newEnemy = new Enemy();
-		newEnemy->Initialise(model_);
-		enemys_.push_back(newEnemy);
-		EncountTimer_ = 120;
+		WaitTimer--;
+		if (WaitTimer <= 0)
+		{
+			waitFlag = false;
+		}
+		return;
+	}
+	std::string line;
+	while (getline(enemyPopCommands, line))
+	{
+		std::istringstream line_stream(line);
+		std::string word;
+		getline(line_stream, word, ',');
+		if (word.find("//") == 0)
+		{
+			continue;
+		}
+		if (word.find("POP") == 0)
+		{
+			getline(line_stream, word, '.');
+			float x = (float)std::atof(word.c_str());
+			getline(line_stream, word, '.');
+			float y = (float)std::atof(word.c_str());
+			getline(line_stream, word, '.');
+			float z = (float)std::atof(word.c_str());
+			Encount(Vector3(x, y, z));
+		} else if (word.find("WAIT") == 0)
+		{
+			getline(line_stream, word, ',');
+			int32_t waitTime = atoi(word.c_str());
+			waitFlag = true;
+			WaitTimer = waitTime;
+			break;
+		}
 	}
 }

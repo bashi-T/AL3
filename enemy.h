@@ -14,7 +14,7 @@ class Enemy
 public:
 
 	~Enemy();
-	void Initialise(Model* model);
+	void Initialise(Model* model, Vector3 translate);
 
 	void Update();
 

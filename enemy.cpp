@@ -6,16 +6,16 @@ Enemy::~Enemy()
 {
 }
 
-void Enemy::Initialise(Model* model) {
+void Enemy::Initialise(Model* model,Vector3 translate) {
 	assert(model);
 	model_ = model;
 	textureHandle_ = TextureManager::Load("sand.png");
 	worldTransform_.Initialize();
 	input_ = Input::GetInstance();
-	worldTransform_.translation_ = {0, 5, 100};
-	worldTransform_.matWorld_.m[3][0] = 0;
-	worldTransform_.matWorld_.m[3][1] = 5;
-	worldTransform_.matWorld_.m[3][2] = 100;
+	worldTransform_.translation_ = translate;
+	worldTransform_.matWorld_.m[3][0] = translate.x;
+	worldTransform_.matWorld_.m[3][1] = translate.y;
+	worldTransform_.matWorld_.m[3][2] = translate.z;
 	ResetApproach();
 }
 
