@@ -12,12 +12,15 @@ void Player::Initialize(Model* model, uint32_t textureHandle,Vector3 playerPosit
 
 	model_ = model;
 	textureHandle_ = textureHandle;
+	ReticleModel_ = model;
+	ReticleTextureHandle_ = TextureManager::Load("JunglePocket.png");
 	input_ = Input::GetInstance();
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = playerPosition;
 	worldTransform_.matWorld_.m[3][0] = playerPosition.x;
 	worldTransform_.matWorld_.m[3][1] = playerPosition.y;
 	worldTransform_.matWorld_.m[3][2] = playerPosition.z;
+	worldTransform3Dreticle_.Initialize();
 };
 
 
@@ -56,6 +59,13 @@ void Player::Update() {
 		max(worldTransform_.matWorld_.m[3][1], -kMoveLimitY);
 	worldTransform_.matWorld_.m[3][1] =
 		min(worldTransform_.matWorld_.m[3][1], +kMoveLimitY);
+
+	const float kDistancePlayerTo3DReticle = 50.0f;
+	Vector3 offset = {0, 0, 1.0f};
+	offset = TransformNormal(offset, worldTransform_.matWorld_);
+	offset = Multiply(kDistancePlayerTo3DReticle ,Normalize(offset));
+	worldTransform3Dreticle_.translation_ = Transform(offset, worldTransform_.matWorld_);
+	worldTransform3Dreticle_.UpdateMatrix();
 
 	Attack();
 	for (PlayerBullet* bullet : bullets_) {
@@ -112,7 +122,13 @@ void Player::Attack()
 			FireTimer = 10;
 			const float kBulletSpeedZ = 1.0f;
 			Vector3 velocity(0, 0, kBulletSpeedZ);
-			velocity = TransformNormal(velocity, worldTransform_.matWorld_);
+			velocity.x =
+			    Subtract(worldTransform3Dreticle_.matWorld_, worldTransform_.matWorld_).m[3][0];
+			velocity.y =
+			    Subtract(worldTransform3Dreticle_.matWorld_, worldTransform_.matWorld_).m[3][1];
+			velocity.z =
+			    Subtract(worldTransform3Dreticle_.matWorld_, worldTransform_.matWorld_).m[3][2];
+			velocity = Multiply(kBulletSpeedZ, Normalize(velocity));
 			PlayerBullet* newBullet = new PlayerBullet();
 			newBullet->Initialise(
 				model_,
@@ -151,4 +167,5 @@ void Player::Draw(ViewProjection viewProjection_)
 	{
 		bullet->Draw(viewProjection_);
 	}
+	ReticleModel_->Draw(worldTransform3Dreticle_, viewProjection_, ReticleTextureHandle_);
 };

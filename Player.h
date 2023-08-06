@@ -47,8 +47,11 @@ public:
 private:
 	RailCamera* railCamera_ = nullptr;
 	WorldTransform worldTransform_;
+	WorldTransform worldTransform3Dreticle_;
 	Model* model_ = nullptr;
+	Model* ReticleModel_ = nullptr;
 	uint32_t textureHandle_ = 0u;
+	uint32_t ReticleTextureHandle_ = 0;
 	Input* input_ = nullptr;
 	int32_t FireTimer = 1;
 	float inputWorld3[3] = {0, 0, 0};
