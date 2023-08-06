@@ -41,7 +41,7 @@ void GameScene::Initialize()
 	skydome_->Initialize(modelSkydome_);
 
 	railCamera_ = new RailCamera();
-	railCamera_->Initialize({0, 0, -30}, {0, 0, 0});
+	railCamera_->Initialize({0, 0, -60}, {0, 0, 0});
 	player_->SetParent(&railCamera_->GetWorldTransform());
 	player_->Initialize(model_, textureHandle_, playerPosition);
 

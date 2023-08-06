@@ -64,6 +64,7 @@ void Player::Update(const ViewProjection viewProjection) {
 	worldTransform_.matWorld_.m[3][1] =
 		min(worldTransform_.matWorld_.m[3][1], +kMoveLimitY);
 
+
 	const float kDistancePlayerTo3DReticle = 50.0f;
 	Vector3 offset = {0, 0, 1.0f};
 	offset = TransformNormal(offset, worldTransform_.matWorld_);
@@ -91,10 +92,59 @@ void Player::Update(const ViewProjection viewProjection) {
 		Multiply(matViewProjectionViewport, matViewport);
 
 	positionReticle = Transform(positionReticle, matViewProjectionViewport);
-	sprite2DReticle_->SetPosition(Vector2(positionReticle.x, positionReticle.y));
-	//sprite2DReticle_->SetPosition(Vector2(
-	//    positionReticle.x + WinApp::kWindowWidth / 2,
-	//    positionReticle.y + WinApp::kWindowHeight / 2));
+	//sprite2DReticle_->SetPosition(Vector2(positionReticle.x, positionReticle.y));
+
+	//POINT mousePosition;
+	//GetCursorPos(&mousePosition);
+	//HWND hwnd = WinApp::GetInstance()->GetHwnd();
+	//ScreenToClient(hwnd, &spritePosition);
+	//sprite2DReticle_->SetPosition(Vector2((float)mousePosition.x,(float)mousePosition.y));
+
+	Vector2 spritePosition = sprite2DReticle_->GetPosition();
+
+	XINPUT_STATE joyState;
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+	   spritePosition.x += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * 10.0f;
+	   spritePosition.y -= (float)joyState.Gamepad.sThumbRY / SHRT_MAX * 10.0f;
+	   sprite2DReticle_->SetPosition(spritePosition);
+	}
+
+
+	Matrix4x4 matVPV = Multiply(viewProjection.matView, viewProjection.matProjection);
+	matVPV = Multiply(matVPV, matViewport);
+	Matrix4x4 matInverseVPV = Inverse(matVPV);
+
+	Vector3 posNear =
+	    Vector3(
+			sprite2DReticle_->GetPosition().x,
+			sprite2DReticle_->GetPosition().y,
+			0);
+	Vector3 posFar =
+	    Vector3(
+			sprite2DReticle_->GetPosition().x,
+			sprite2DReticle_->GetPosition().y,
+			1);
+	posNear = Transform(posNear, matInverseVPV);
+	posFar = Transform(posFar, matInverseVPV);
+
+	Vector3 ReticleDirection = Subtract(posNear, posFar);
+	ReticleDirection = Normalize(ReticleDirection);
+	const float kDistanceTestObject = -80;
+	worldTransform3Dreticle_.translation_ =
+	    Add(posNear, Multiply(kDistanceTestObject, ReticleDirection));
+	worldTransform3Dreticle_.UpdateMatrix();
+
+	//ImGui::Begin("Player");
+	//ImGui::Text("2DReticle:(%f,%f)",
+	//	sprite2DReticle_->GetPosition().x,
+	//	sprite2DReticle_->GetPosition().y);
+	//ImGui::Text("Near:(%+.2f,%+.2f,%+.2f", posNear.x, posNear.y, posNear.z);
+	//ImGui::Text("Far:(%+.2f,%+.2f,%+.2f", posFar.x, posFar.y, posFar.z);
+	//ImGui::Text("3DReticle:(%+.2f,%+.2f,%+.2f",
+	//	worldTransform3Dreticle_.translation_.x,
+	//    worldTransform3Dreticle_.translation_.y,
+	//	worldTransform3Dreticle_.translation_.z);
+	//ImGui::End();   
 
 	Attack();
 	for (PlayerBullet* bullet : bullets_) {
@@ -107,22 +157,31 @@ void Player::Translate()
 	Vector3 move = {0, 0, 0};
 	const float kCharacterSpeed = 0.4f;
 
-	if (input_->PushKey(DIK_LEFT))
+	XINPUT_STATE joyState;
+
+	if (Input::GetInstance()->GetJoystickState(0, joyState))
 	{
-	   move.x -= kCharacterSpeed;
+	   move.x += (float)joyState.Gamepad.sThumbLX / SHRT_MAX * kCharacterSpeed;
+	   move.y += (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed;
 	}
-	if (input_->PushKey(DIK_RIGHT))
-	{
-	   move.x += kCharacterSpeed;
-	}
-	if (input_->PushKey(DIK_UP))
-	{
-	   move.y += kCharacterSpeed;
-	}
-	if (input_->PushKey(DIK_DOWN))
-	{
-	   move.y -= kCharacterSpeed;
-	}
+
+
+	//if (input_->PushKey(DIK_LEFT))
+	//{
+	//   move.x -= kCharacterSpeed;
+	//}
+	//if (input_->PushKey(DIK_RIGHT))
+	//{
+	//   move.x += kCharacterSpeed;
+	//}
+	//if (input_->PushKey(DIK_UP))
+	//{
+	//   move.y += kCharacterSpeed;
+	//}
+	//if (input_->PushKey(DIK_DOWN))
+	//{
+	//   move.y -= kCharacterSpeed;
+	//}
 
 	worldTransform_.translation_.x += move.x;
 	worldTransform_.translation_.y += move.y;
@@ -143,7 +202,12 @@ void Player::Rotate()
 }
 void Player::Attack()
 {
-	if (input_->PushKey(DIK_SPACE))
+	XINPUT_STATE joyState;
+	if (!Input::GetInstance()->GetJoystickState(0, joyState))
+	{
+		return;
+	}
+	if (joyState.Gamepad.wButtons&XINPUT_GAMEPAD_RIGHT_SHOULDER)
 	{
 		FireTimer--;
 		if (FireTimer == 0)
