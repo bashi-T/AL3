@@ -7,21 +7,25 @@ void Enemy::Initialise(Model* model)
 	textureHandle_ = TextureManager::Load("sand.png");
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = { 0,5,100 };
+	//spFuncTable = &Enemy::Approach;
 }
 
 void Enemy::Update() {
 	const float kBulletSpeedZ = -0.5f;
 	Vector3 velocity(0, 0, kBulletSpeedZ);
 
-	switch (phase_) {
-	case Phase::Approach:
-	default:
-		Approach();
-		break;
-	case Phase::Leave:
-		Leave();
-		break;
-	}
+	//switch (phase_) {
+	//case Phase::Approach:
+	//default:
+	//	Approach();
+	//	break;
+	//case Phase::Leave:
+	//	Leave();
+	//	break;
+	//}
+
+	(this->*spFuncTable[static_cast<size_t>(phase_)])();
+
 	worldTransform_.UpdateMatrix();
 }
 
@@ -49,3 +53,9 @@ void Enemy::Leave() {
 		phase_ = Phase::Approach;
 	}
 }
+
+void (Enemy::*Enemy::spFuncTable[])()
+{
+	&Enemy::Approach,
+	&Enemy::Leave
+};
