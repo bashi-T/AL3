@@ -1,5 +1,21 @@
 #include "enemy.h"
 
+Enemy::Enemy()
+{
+	state_=new EnemyStateApproach();
+}
+
+Enemy::~Enemy()
+{
+	delete state_;
+}
+
+void Enemy::ChangeState(BaseEnemyState* newState)
+{
+	delete state_;
+	state_ = newState;
+}
+
 void Enemy::Initialise(Model* model)
 {
 	assert(model);
@@ -7,26 +23,20 @@ void Enemy::Initialise(Model* model)
 	textureHandle_ = TextureManager::Load("sand.png");
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = { 0,5,100 };
-	//spFuncTable = &Enemy::Approach;
 }
 
 void Enemy::Update() {
 	const float kBulletSpeedZ = -0.5f;
 	Vector3 velocity(0, 0, kBulletSpeedZ);
 
-	//switch (phase_) {
-	//case Phase::Approach:
-	//default:
-	//	Approach();
-	//	break;
-	//case Phase::Leave:
-	//	Leave();
-	//	break;
-	//}
-
-	(this->*spFuncTable[static_cast<size_t>(phase_)])();
+	//(this->*spFuncTable[static_cast<size_t>(phase_)])();
 
 	worldTransform_.UpdateMatrix();
+}
+
+void Enemy::translateZ(float EnemySpeedZ)
+{
+	worldTransform_.translation_.z += EnemySpeedZ;
 }
 
 void Enemy::Draw(const ViewProjection& viewProjection)
@@ -35,10 +45,6 @@ void Enemy::Draw(const ViewProjection& viewProjection)
 }
 
 void Enemy::Approach() {
-	kEnemySpeedZ = -0.5f;
-	worldTransform_.translation_.x += kEnemySpeedX;
-	worldTransform_.translation_.y += kEnemySpeedY;
-	worldTransform_.translation_.z += kEnemySpeedZ;
 	if (worldTransform_.translation_.z < 0.0f) {
 		phase_ = Phase::Leave;
 	}
@@ -54,8 +60,17 @@ void Enemy::Leave() {
 	}
 }
 
-void (Enemy::*Enemy::spFuncTable[])()
+//void (Enemy::*Enemy::spFuncTable[])()
+//{
+//	&Enemy::Approach,
+//	&Enemy::Leave};
+
+void EnemyStateApproach::Update()
 {
-	&Enemy::Approach,
-	&Enemy::Leave
-};
+	enemy_->translateZ(0.5f);
+}
+
+void EnemyStateLeave::Update()
+{
+	Enemy::translateZ(-0.5f);
+}
