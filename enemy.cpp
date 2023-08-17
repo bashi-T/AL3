@@ -81,3 +81,4 @@ void BaseEnemyState::Update()
 		enemy_->ChangeState(new EnemyStateLeave);
 	}
 }
+
