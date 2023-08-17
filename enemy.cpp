@@ -1,8 +1,9 @@
 #include "enemy.h"
+#include<iostream>
 
 Enemy::Enemy()
 {
-	state_=new EnemyStateApproach();
+	state_ = new EnemyStateApproach();
 }
 
 Enemy::~Enemy()
@@ -25,13 +26,12 @@ void Enemy::Initialise(Model* model)
 	worldTransform_.translation_ = { 0,5,100 };
 }
 
-void Enemy::Update() {
-	const float kBulletSpeedZ = -0.5f;
-	Vector3 velocity(0, 0, kBulletSpeedZ);
-
-	//(this->*spFuncTable[static_cast<size_t>(phase_)])();
+void Enemy::Update()
+{
+	state_->Update();
 
 	worldTransform_.UpdateMatrix();
+
 }
 
 void Enemy::translateZ(float EnemySpeedZ)
@@ -60,17 +60,24 @@ void Enemy::Leave() {
 	}
 }
 
-//void (Enemy::*Enemy::spFuncTable[])()
-//{
-//	&Enemy::Approach,
-//	&Enemy::Leave};
-
 void EnemyStateApproach::Update()
 {
-	enemy_->translateZ(0.5f);
+	enemy_->translateZ(-0.5f);
 }
 
 void EnemyStateLeave::Update()
 {
-	Enemy::translateZ(-0.5f);
+	enemy_->translateZ(0.5f);
+}
+
+void BaseEnemyState::Update()
+{
+	if (enemy_->GetWTtranslationZ() >= 120.0f)
+	{
+		enemy_->ChangeState(new EnemyStateApproach);
+	}
+	if (enemy_->GetWTtranslationZ() <= 20.0f)
+	{
+		enemy_->ChangeState(new EnemyStateLeave);
+	}
 }

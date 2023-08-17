@@ -109,7 +109,6 @@
     <ClCompile Include="2d\ImGuiManager.cpp" />
     <ClCompile Include="3d\WorldTransform.cpp" />
     <ClCompile Include="ALVector.cpp" />
-    <ClCompile Include="BaseEnemyState.cpp" />
     <ClCompile Include="base\DirectXCommon.cpp" />
     <ClCompile Include="base\WinApp.cpp" />
     <ClCompile Include="enemy.cpp" />
@@ -138,7 +137,6 @@
     <ClInclude Include="3d\WorldTransform.h" />
     <ClInclude Include="ALVector.h" />
     <ClInclude Include="audio\Audio.h" />
-    <ClInclude Include="BaseEnemyState.h" />
     <ClInclude Include="base\DirectXCommon.h" />
     <ClInclude Include="base\SafeDelete.h" />
     <ClInclude Include="base\TextureManager.h" />
