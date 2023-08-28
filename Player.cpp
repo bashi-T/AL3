@@ -264,5 +264,5 @@ void Player::Draw(ViewProjection viewProjection)
 	{
 		bullet->Draw(viewProjection);
 	}
-	ReticleModel_->Draw(worldTransform3Dreticle_, viewProjection, ReticleTextureHandle_);
+	//ReticleModel_->Draw(worldTransform3Dreticle_, viewProjection, ReticleTextureHandle_);
 };

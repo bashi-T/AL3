@@ -48,17 +48,17 @@ void Enemy::Draw(const ViewProjection& viewProjection)
 }
 
 void Enemy::Approach() {
-	kEnemySpeedZ = -0.5f;
+	kEnemySpeedZ = -0.75f;
 	worldTransform_.translation_.x += kEnemySpeedX;
 	worldTransform_.translation_.y += kEnemySpeedY;
 	worldTransform_.translation_.z += kEnemySpeedZ;
-	if (worldTransform_.translation_.z < 20.0f) {
+	if (worldTransform_.translation_.z < -120.0f) {
 		phase_ = Phase::Leave;
 	}
 }
 
 void Enemy::Leave() {
-	kEnemySpeedZ = 0.5f;
+	kEnemySpeedZ = 0.75f;
 	worldTransform_.translation_.x += kEnemySpeedX;
 	worldTransform_.translation_.y += kEnemySpeedY;
 	worldTransform_.translation_.z += kEnemySpeedZ;

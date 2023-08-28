@@ -44,7 +44,6 @@ public:
 	bool IsDead() const { return isDead_; }
 
 private:
-	//EnemyBullet* bullet_ = nullptr;
 	GameScene* gameScene_ = nullptr;
 	Player* player_ = nullptr;
 	WorldTransform worldTransform_;
