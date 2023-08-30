@@ -83,4 +83,5 @@ private: // メンバ変数
 	int32_t EncountTimer_ = 1;
 	bool waitFlag = false;
 	int32_t WaitTimer = 1;
+	int32_t SceneNumber = 0;
 };

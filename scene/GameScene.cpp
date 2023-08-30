@@ -51,46 +51,53 @@ void GameScene::Initialize()
 
 void GameScene::Update()
 {
-	railCamera_->Update();
+	if (SceneNumber == 0)
+	{
 
-	viewProjection_.matView = railCamera_->
-		GetViewProjection().matView;
-
-	viewProjection_.matProjection = railCamera_->
-		GetViewProjection().matProjection;
-
-	viewProjection_.TransferMatrix();
-	
-	player_->Update(viewProjection_);
-	
-UpdateEnemyPopCommands();
-
-	enemys_.remove_if([](Enemy* enemy)
-		{
-		if (enemy->IsDead())
-		{
-			delete enemy;
-			return true;
-		}
-		return false;
-	});
-	enemyBullets_.remove_if([](EnemyBullet* bullet) {
-		if (bullet->IsDead()) {
-			delete bullet;
-			return true;
-		}
-		return false;
-	});
-	for (Enemy* enemy : enemys_) {
-		enemy->Update();
 	}
-	for (EnemyBullet* bullet : enemyBullets_) {
-		bullet->Update();
+	if (SceneNumber == 0 && input_->PushKey(DIK_SPACE))
+	{
+		SceneNumber = 1;
 	}
+	if (SceneNumber==1)
+	{
+		railCamera_->Update();
 
-	skydome_->Update();
+		viewProjection_.matView = railCamera_->GetViewProjection().matView;
 
-	CheckAllCollitions();
+		viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
+
+		viewProjection_.TransferMatrix();
+
+		player_->Update(viewProjection_);
+
+		UpdateEnemyPopCommands();
+
+		enemys_.remove_if([](Enemy* enemy) {
+			if (enemy->IsDead()) {
+				delete enemy;
+				return true;
+			}
+			return false;
+		});
+		enemyBullets_.remove_if([](EnemyBullet* bullet) {
+			if (bullet->IsDead()) {
+				delete bullet;
+				return true;
+			}
+			return false;
+		});
+		for (Enemy* enemy : enemys_) {
+			enemy->Update();
+		}
+		for (EnemyBullet* bullet : enemyBullets_) {
+			bullet->Update();
+		}
+
+		skydome_->Update();
+
+		CheckAllCollitions();
+	}
 
 	//debugCamera_->Update();
 //#ifdef _DEBUG
