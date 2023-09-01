@@ -16,7 +16,7 @@ void RailCamera::Initialize(Vector3 translate, Vector3 radian)
 void RailCamera::Update()
 {
 	Translate();
-	Rotate();
+	//Rotate();
 
 	worldTransform_.matWorld_ = MakeAffineMatrix(
 	    worldTransform_.scale_,
@@ -39,10 +39,10 @@ void RailCamera::Update()
 		worldTransform_.rotation_.z
 	};
 
-	ImGui::Begin("Camera");
-	ImGui::SliderFloat3("world", inputTranslationFloat3, 0.0f, 1.0f);
-	ImGui::SliderFloat3("rotation", inputRotationFloat3, 0.0f, 1.0f);
-	ImGui::End();
+	//ImGui::Begin("Camera");
+	//ImGui::SliderFloat3("world", inputTranslationFloat3, 0.0f, 1.0f);
+	//ImGui::SliderFloat3("rotation", inputRotationFloat3, 0.0f, 1.0f);
+	//ImGui::End();
 }
 
 void RailCamera::Translate()
@@ -78,26 +78,34 @@ void RailCamera::Rotate()
 {
 	Vector3 rotate = {0, 0, 0};
 
-	const float kRotSpeed = 0.02f;
+	const float kRotSpeed = 0.2f;
 
-	if (input_->PushKey(DIK_D)) {
-		rotate.y += kRotSpeed;
+	//if (input_->PushKey(DIK_D)) {
+	//	rotate.y += kRotSpeed;
+	//}
+	//if (input_->PushKey(DIK_A)) {
+	//	rotate.y -= kRotSpeed;
+	//}
+	//if (input_->PushKey(DIK_W)) {
+	//	rotate.x += kRotSpeed;
+	//}
+	//if (input_->PushKey(DIK_X)) {
+	//	rotate.x -= kRotSpeed;
+	//}
+	//if (input_->PushKey(DIK_E)) {
+	//	rotate.z += kRotSpeed;
+	//}
+	//if (input_->PushKey(DIK_Z)) {
+	//	rotate.z -= kRotSpeed;
+	//}
+
+		XINPUT_STATE joyState;
+
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		rotate.y += (float)joyState.Gamepad.bRightTrigger / SHRT_MAX * kRotSpeed;
+		rotate.y -= (float)joyState.Gamepad.bLeftTrigger / SHRT_MAX * kRotSpeed;
 	}
-	if (input_->PushKey(DIK_A)) {
-		rotate.y -= kRotSpeed;
-	}
-	if (input_->PushKey(DIK_W)) {
-		rotate.x += kRotSpeed;
-	}
-	if (input_->PushKey(DIK_X)) {
-		rotate.x -= kRotSpeed;
-	}
-	if (input_->PushKey(DIK_E)) {
-		rotate.z += kRotSpeed;
-	}
-	if (input_->PushKey(DIK_Z)) {
-		rotate.z -= kRotSpeed;
-	}
+
 
 	worldTransform_.rotation_.x += rotate.x;
 	worldTransform_.rotation_.y += rotate.y;

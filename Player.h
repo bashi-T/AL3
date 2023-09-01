@@ -34,6 +34,7 @@ public:
 	Vector3 GetWorldPosition();
 	WorldTransform GetWorldTransform() { return worldTransform_; }
 	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
+	bool IsDead() const { return isDead_; }
 
 	/// <summary>
 	/// 
@@ -44,13 +45,17 @@ public:
 	void DrawUI();
 
 	std::list<PlayerBullet*>bullets_;
+	int32_t NegaState = 0;
+	int32_t NegaTimer = 0;
+	int32_t Life = 10;
 
-	const float kMoveLimitX = 33;
-	const float kMoveLimitY = 18;
+	const float kMoveLimitX = 20;
+	const float kMoveLimitY = 10;
 
 private:
 	RailCamera* railCamera_ = nullptr;
 	WorldTransform worldTransform_;
+	WorldTransform worldTransformDefault_;
 	WorldTransform worldTransform3Dreticle_;
 	Model* model_ = nullptr;
 	Model* ReticleModel_ = nullptr;
@@ -61,4 +66,5 @@ private:
 	float inputWorld3[3] = {0, 0, 0};
 	float inputtranslate3[3] = {0, 0, 0};
 	Sprite* sprite2DReticle_ = nullptr;
+	bool isDead_ = false;
 };

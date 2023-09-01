@@ -22,6 +22,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle,Vector3 playerPosit
 
 	input_ = Input::GetInstance();
 	worldTransform_.Initialize();
+	worldTransformDefault_.Initialize();
 	worldTransform_.translation_ = playerPosition;
 	worldTransform_.matWorld_.m[3][0] = playerPosition.x;
 	worldTransform_.matWorld_.m[3][1] = playerPosition.y;
@@ -40,90 +41,55 @@ void Player::Update(const ViewProjection viewProjection) {
 
 	Translate();
 
-	Rotate();
+	worldTransform_.scale_.x = worldTransformDefault_.scale_.x + NegaTimer / 360.0f;
+	worldTransform_.scale_.y = worldTransformDefault_.scale_.y + NegaTimer / 360.0f;
+	worldTransform_.scale_.z = worldTransformDefault_.scale_.z + NegaTimer / 360.0f;
 
 	worldTransform_.UpdateMatrix();
-
-	ImGui::Begin("player");
-	inputWorld3[0] = worldTransform_.matWorld_.m[3][0];
-	inputWorld3[1] = worldTransform_.matWorld_.m[3][1];
-	inputWorld3[2] = worldTransform_.matWorld_.m[3][2];
-	ImGui::InputFloat3("world", inputWorld3);
-	inputtranslate3[0] = worldTransform_.translation_.x;
-	inputtranslate3[1] = worldTransform_.translation_.y;
-	inputtranslate3[2] = worldTransform_.translation_.z;
-	ImGui::InputFloat3("translation", inputtranslate3);
-	ImGui::End();
-
-	worldTransform_.matWorld_.m[3][0] =
-	    max(worldTransform_.matWorld_.m[3][0], -kMoveLimitX);
-	worldTransform_.matWorld_.m[3][0] =
-	    min(worldTransform_.matWorld_.m[3][0], +kMoveLimitX);
-	worldTransform_.matWorld_.m[3][1] =
-		max(worldTransform_.matWorld_.m[3][1], -kMoveLimitY);
-	worldTransform_.matWorld_.m[3][1] =
-		min(worldTransform_.matWorld_.m[3][1], +kMoveLimitY);
-
+	worldTransform_.matWorld_.m[3][0] = max(worldTransform_.matWorld_.m[3][0], -kMoveLimitX);
+	worldTransform_.matWorld_.m[3][0] = min(worldTransform_.matWorld_.m[3][0], +kMoveLimitX);
+	worldTransform_.matWorld_.m[3][1] = max(worldTransform_.matWorld_.m[3][1], -kMoveLimitY);
+	worldTransform_.matWorld_.m[3][1] = min(worldTransform_.matWorld_.m[3][1], +kMoveLimitY);
 
 	const float kDistancePlayerTo3DReticle = 50.0f;
 	Vector3 offset = {0, 0, 1.0f};
 	offset = TransformNormal(offset, worldTransform_.matWorld_);
-	offset = Multiply(kDistancePlayerTo3DReticle ,Normalize(offset));
+	offset = Multiply(kDistancePlayerTo3DReticle, Normalize(offset));
 	worldTransform3Dreticle_.translation_ = Transform(offset, worldTransform_.matWorld_);
 	worldTransform3Dreticle_.UpdateMatrix();
 
 	Vector3 positionReticle =
-    {
-	        worldTransform3Dreticle_.matWorld_.m[3][0],
-	        worldTransform3Dreticle_.matWorld_.m[3][1],
-	        worldTransform3Dreticle_.matWorld_.m[3][2]
+	{
+	    worldTransform3Dreticle_.matWorld_.m[3][0],
+		worldTransform3Dreticle_.matWorld_.m[3][1],
+	    worldTransform3Dreticle_.matWorld_.m[3][2]
 	};
-	Matrix4x4 matViewport = MakeViewportMatrix(
-			offset.x,
-			offset.y,
-			WinApp::kWindowWidth,
-			WinApp::kWindowHeight,
-			0,
-			1);
+	Matrix4x4 matViewport =
+	    MakeViewportMatrix(offset.x, offset.y, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
 
 	Matrix4x4 matViewProjectionViewport =
 	    Multiply(viewProjection.matView, viewProjection.matProjection);
-	matViewProjectionViewport =
-		Multiply(matViewProjectionViewport, matViewport);
+	matViewProjectionViewport = Multiply(matViewProjectionViewport, matViewport);
 
 	positionReticle = Transform(positionReticle, matViewProjectionViewport);
-	//sprite2DReticle_->SetPosition(Vector2(positionReticle.x, positionReticle.y));
-
-	//POINT mousePosition;
-	//GetCursorPos(&mousePosition);
-	//HWND hwnd = WinApp::GetInstance()->GetHwnd();
-	//ScreenToClient(hwnd, &spritePosition);
-	//sprite2DReticle_->SetPosition(Vector2((float)mousePosition.x,(float)mousePosition.y));
 
 	Vector2 spritePosition = sprite2DReticle_->GetPosition();
 
 	XINPUT_STATE joyState;
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-	   spritePosition.x += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * 10.0f;
-	   spritePosition.y -= (float)joyState.Gamepad.sThumbRY / SHRT_MAX * 10.0f;
+	   spritePosition.x += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * 7.5f;
+	   spritePosition.y -= (float)joyState.Gamepad.sThumbRY / SHRT_MAX * 7.5f;
 	   sprite2DReticle_->SetPosition(spritePosition);
 	}
-
 
 	Matrix4x4 matVPV = Multiply(viewProjection.matView, viewProjection.matProjection);
 	matVPV = Multiply(matVPV, matViewport);
 	Matrix4x4 matInverseVPV = Inverse(matVPV);
 
 	Vector3 posNear =
-	    Vector3(
-			sprite2DReticle_->GetPosition().x,
-			sprite2DReticle_->GetPosition().y,
-			0);
+	    Vector3(sprite2DReticle_->GetPosition().x, sprite2DReticle_->GetPosition().y, 0);
 	Vector3 posFar =
-	    Vector3(
-			sprite2DReticle_->GetPosition().x,
-			sprite2DReticle_->GetPosition().y,
-			1);
+	    Vector3(sprite2DReticle_->GetPosition().x, sprite2DReticle_->GetPosition().y, 1);
 	posNear = Transform(posNear, matInverseVPV);
 	posFar = Transform(posFar, matInverseVPV);
 
@@ -134,21 +100,13 @@ void Player::Update(const ViewProjection viewProjection) {
 	    Add(posNear, Multiply(kDistanceTestObject, ReticleDirection));
 	worldTransform3Dreticle_.UpdateMatrix();
 
-	//ImGui::Begin("Player");
-	//ImGui::Text("2DReticle:(%f,%f)",
-	//	sprite2DReticle_->GetPosition().x,
-	//	sprite2DReticle_->GetPosition().y);
-	//ImGui::Text("Near:(%+.2f,%+.2f,%+.2f", posNear.x, posNear.y, posNear.z);
-	//ImGui::Text("Far:(%+.2f,%+.2f,%+.2f", posFar.x, posFar.y, posFar.z);
-	//ImGui::Text("3DReticle:(%+.2f,%+.2f,%+.2f",
-	//	worldTransform3Dreticle_.translation_.x,
-	//    worldTransform3Dreticle_.translation_.y,
-	//	worldTransform3Dreticle_.translation_.z);
-	//ImGui::End();   
-
 	Attack();
 	for (PlayerBullet* bullet : bullets_) {
 	   bullet->Update();
+	}
+	if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_X)
+	{
+	   NegaState = 1;
 	}
 }
 
@@ -165,27 +123,8 @@ void Player::Translate()
 	   move.y += (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed;
 	}
 
-
-	//if (input_->PushKey(DIK_LEFT))
-	//{
-	//   move.x -= kCharacterSpeed;
-	//}
-	//if (input_->PushKey(DIK_RIGHT))
-	//{
-	//   move.x += kCharacterSpeed;
-	//}
-	//if (input_->PushKey(DIK_UP))
-	//{
-	//   move.y += kCharacterSpeed;
-	//}
-	//if (input_->PushKey(DIK_DOWN))
-	//{
-	//   move.y -= kCharacterSpeed;
-	//}
-
 	worldTransform_.translation_.x += move.x;
 	worldTransform_.translation_.y += move.y;
-	//worldTransform_.translation_.z += move.z;
 }
 
 void Player::Rotate()
@@ -200,6 +139,7 @@ void Player::Rotate()
 		worldTransform_.rotation_.y += kRotSpeed;
 	}
 }
+
 void Player::Attack()
 {
 	XINPUT_STATE joyState;
@@ -236,7 +176,11 @@ void Player::Attack()
 
 void Player::OnCollition()
 {
-
+	Life--;
+	if (Life == 0)
+	{
+		isDead_ = true;
+	}
 }
 
 void Player::SetParent(const WorldTransform* parent)
@@ -264,5 +208,4 @@ void Player::Draw(ViewProjection viewProjection)
 	{
 		bullet->Draw(viewProjection);
 	}
-	//ReticleModel_->Draw(worldTransform3Dreticle_, viewProjection, ReticleTextureHandle_);
 };

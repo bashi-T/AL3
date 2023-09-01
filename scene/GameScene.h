@@ -11,6 +11,7 @@
 #include"Skydome.h"
 #include"RailCamera.h"
 #include"sstream"
+
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -68,7 +69,9 @@ private: // メンバ変数
 	/// </summary>
 	uint32_t textureHandle_ = 0;
 	Sprite* sprite_ = nullptr;
-
+	Sprite* spriteIcon_[10] = {};
+	uint32_t textureTitle_ = TextureManager::Load("Title.png");
+	uint32_t textureIcon_;
 	Model* model_ = nullptr;
 	ViewProjection viewProjection_;
 	Player* player_ = nullptr;
@@ -83,5 +86,7 @@ private: // メンバ変数
 	int32_t EncountTimer_ = 1;
 	bool waitFlag = false;
 	int32_t WaitTimer = 1;
+	int32_t EnemyHit = 0;
 	int32_t SceneNumber = 0;
+	std::string line;
 };

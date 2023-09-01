@@ -42,6 +42,7 @@ public:
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 	void SetPlayer(Player* player) { player_ = player; }
 	bool IsDead() const { return isDead_; }
+	bool isDead_ = false;
 
 private:
 	GameScene* gameScene_ = nullptr;
@@ -54,6 +55,5 @@ private:
 	float kEnemySpeedX = 0.0f;
 	float kEnemySpeedY = 0.0f;
 	float kEnemySpeedZ = 0.0f;
-	bool isDead_ = false;
 };
 

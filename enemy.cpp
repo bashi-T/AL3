@@ -9,7 +9,7 @@ Enemy::~Enemy()
 void Enemy::Initialise(Model* model,Vector3 translate) {
 	assert(model);
 	model_ = model;
-	textureHandle_ = TextureManager::Load("sand.png");
+	textureHandle_ = TextureManager::Load("enemy.png");
 	worldTransform_.Initialize();
 	input_ = Input::GetInstance();
 	worldTransform_.translation_ = translate;
@@ -52,7 +52,7 @@ void Enemy::Approach() {
 	worldTransform_.translation_.x += kEnemySpeedX;
 	worldTransform_.translation_.y += kEnemySpeedY;
 	worldTransform_.translation_.z += kEnemySpeedZ;
-	if (worldTransform_.translation_.z < -120.0f) {
+	if (worldTransform_.translation_.z < 20.0f) {
 		phase_ = Phase::Leave;
 	}
 }
@@ -62,7 +62,7 @@ void Enemy::Leave() {
 	worldTransform_.translation_.x += kEnemySpeedX;
 	worldTransform_.translation_.y += kEnemySpeedY;
 	worldTransform_.translation_.z += kEnemySpeedZ;
-	if (worldTransform_.translation_.z > 120.0f)
+	if (worldTransform_.translation_.z > 170.0f)
 	{
 		phase_ = Phase::Approach;
 	}

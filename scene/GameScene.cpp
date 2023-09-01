@@ -7,10 +7,10 @@
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
+	delete sprite_;
 	delete model_;
 	delete player_;
 	delete debugCamera_;
-	//delete enemy_;
 	delete modelSkydome_;
 	delete railCamera_;
 	for (EnemyBullet* bullet : enemyBullets_) {
@@ -19,6 +19,9 @@ GameScene::~GameScene() {
 	for (Enemy* enemy : enemys_) {
 		delete enemy;
 	}
+	for (int i = 0; i < 10 - EnemyHit; i++) {
+		delete spriteIcon_[i];
+	}
 }
 
 void GameScene::Initialize()
@@ -26,8 +29,8 @@ void GameScene::Initialize()
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
-
-	textureHandle_ = TextureManager::Load("uvChecker.png");
+	sprite_ = Sprite::Create(textureTitle_, {0, 0});
+	textureHandle_ = TextureManager::Load("Player.png");
 	model_ = Model::Create();
 	viewProjection_.Initialize();
 	modelSkydome_ = Model::CreateFromOBJ("world", true);
@@ -51,8 +54,32 @@ void GameScene::Initialize()
 
 void GameScene::Update()
 {
+	XINPUT_STATE joyState;
+	enemys_.remove_if([](Enemy* enemy) {
+		if (enemy->IsDead()) {
+			delete enemy;
+			return true;
+		}
+		return false;
+	});
+	enemyBullets_.remove_if([](EnemyBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
+
+	if (!Input::GetInstance()->GetJoystickState(0, joyState))
+	{
+		return;
+	}
+
 	if (SceneNumber == 0)
 	{
+		delete sprite_;
+		textureTitle_ = TextureManager::Load("Title.png");
+		sprite_ = Sprite::Create(textureTitle_, {0, 0});
 
 	}
 	if (SceneNumber == 0 && input_->PushKey(DIK_SPACE))
@@ -73,7 +100,54 @@ void GameScene::Update()
 
 		UpdateEnemyPopCommands();
 
-		enemys_.remove_if([](Enemy* enemy) {
+		for (Enemy* enemy : enemys_)
+		{
+			enemy->Update();
+		}
+		for (EnemyBullet* bullet : enemyBullets_)
+		{
+			bullet->Update();
+		}
+
+		skydome_->Update();
+
+		CheckAllCollitions();
+
+		if (player_->Life == 0)
+		{
+			delete player_;
+			SceneNumber = 2;
+		}
+
+		if (player_->NegaState == 1)
+		{
+			player_->NegaTimer--;
+			delete modelSkydome_;
+			modelSkydome_ = Model::CreateFromOBJ("worldNega", true);
+			skydome_->Initialize(modelSkydome_);
+
+			if (player_->NegaTimer == 0)
+			{
+				delete modelSkydome_;
+				modelSkydome_ = Model::CreateFromOBJ("world", true);
+				skydome_->Initialize(modelSkydome_);
+				player_->NegaState = 0;
+			}
+		}
+
+		if (player_->NegaState == 0 && player_->NegaTimer < 180)
+		{
+			player_->NegaTimer++;
+		}
+		if (EnemyHit == 10) {
+			SceneNumber = 3;
+		}
+	}
+
+	if (SceneNumber == 2) {
+
+	enemys_.remove_if([](Enemy* enemy) {
+			enemy->isDead_ = true;
 			if (enemy->IsDead()) {
 				delete enemy;
 				return true;
@@ -81,44 +155,65 @@ void GameScene::Update()
 			return false;
 		});
 		enemyBullets_.remove_if([](EnemyBullet* bullet) {
-			if (bullet->IsDead()) {
+		bullet->isDead_ = true;
+		if (bullet->IsDead()) {
 				delete bullet;
 				return true;
 			}
 			return false;
 		});
-		for (Enemy* enemy : enemys_) {
-			enemy->Update();
-		}
-		for (EnemyBullet* bullet : enemyBullets_) {
-			bullet->Update();
-		}
 
-		skydome_->Update();
+		delete sprite_;
+		textureTitle_ = TextureManager::Load("GAMEOVER.png");
+		sprite_ = Sprite::Create(textureTitle_, {0, 0});
 
-		CheckAllCollitions();
+
+		if (SceneNumber == 2 && input_->PushKey(DIK_SPACE)) {
+			//for (Enemy* enemy : enemys_) {
+			//	delete enemy;
+			//}
+			//for (EnemyBullet* bullet : enemyBullets_) {
+			//	delete bullet;
+			//}
+			Initialize();
+			SceneNumber = 0;
+		};
 	}
 
-	//debugCamera_->Update();
-//#ifdef _DEBUG
-//	if (input_->TriggerKey(DIK_S))
-//	{
-//		isDebugCameraActive_ = true;
-//	}
-//#endif
+	if (SceneNumber == 3) {
 
-	//if (isDebugCameraActive_) {
-	//	debugCamera_->Update();
-	//	viewProjection_.matView = debugCamera_->
-	// GetViewProjection().matView;
-	//	viewProjection_.matProjection = debugCamera_->
-	// GetViewProjection().matProjection;
-	//	viewProjection_.TransferMatrix();
-	//}
-	//else 
-	//{
-	//	viewProjection_.UpdateMatrix();
-	//}
+	    enemys_.remove_if([](Enemy* enemy) {
+			enemy->isDead_ = true;
+			if (enemy->IsDead()) {
+				delete enemy;
+				return true;
+			}
+			return false;
+		});
+		enemyBullets_.remove_if([](EnemyBullet* bullet) {
+		bullet->isDead_ = true;
+		if (bullet->IsDead()) {
+				delete bullet;
+				return true;
+			}
+			return false;
+		});
+
+		delete sprite_;
+		textureTitle_ = TextureManager::Load("GAMECLEAR.png");
+		sprite_ = Sprite::Create(textureTitle_, {0, 0});
+
+		if (SceneNumber == 3 && input_->PushKey(DIK_SPACE)) {
+			//for (Enemy* enemy : enemys_) {
+			//	delete enemy;
+			//}
+			//for (EnemyBullet* bullet : enemyBullets_) {
+			//	delete bullet;
+			//}
+			Initialize();
+			SceneNumber = 0;
+		};
+	}
 }
 
 void GameScene::Draw() {
@@ -148,7 +243,11 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	skydome_->Draw(viewProjection_);
-	player_->Draw(viewProjection_);
+	if (SceneNumber != 2)
+	{
+		player_->Draw(viewProjection_);
+	}
+
 	for (Enemy*enemy:enemys_) {
 		enemy->Draw(viewProjection_);
 	}
@@ -167,7 +266,22 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
-	player_->DrawUI();
+	
+	if (SceneNumber != 1) {
+		sprite_->Draw();
+	}
+	if (SceneNumber == 1)
+	{
+		for (int i=0;i<10-EnemyHit;i++)
+		{
+			textureIcon_ = TextureManager::Load("PlayerIcon.png");
+			spriteIcon_[i] = Sprite::Create(textureIcon_, {0, float(i * 40)});
+			spriteIcon_[i]->Draw();
+		}
+	};
+	if (SceneNumber != 2) {
+		player_->DrawUI();
+	}
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -182,16 +296,19 @@ void GameScene::CheckAllCollitions()
 	const std::list<Enemy*>& enemys = GetEnemys();
 	const std::list<EnemyBullet*>& enemyBullets = GetBullets();
 #pragma region
-	posA = player_->GetWorldPosition();
-	for (EnemyBullet* bullet : enemyBullets)
+	if (player_->NegaState==0)
 	{
-		posB = bullet->GetWorldPosition();
-		Vector3 distance = Subtract(posA, posB);
-		if ((distance.x * distance.x) + (distance.y * distance.y) +
-			(distance.z * distance.z) <= 4)
+		posA = player_->GetWorldPosition();
+		for (EnemyBullet* bullet : enemyBullets)
 		{
-			player_->OnCollition();
-			bullet->OnCollition();
+			posB = bullet->GetWorldPosition();
+			Vector3 distance = Subtract(posA, posB);
+			if ((distance.x * distance.x) + (distance.y * distance.y) +
+				(distance.z * distance.z) <=4 * player_->GetWorldTransform().scale_.x)
+			{
+				player_->OnCollition();
+				bullet->OnCollition();
+			}
 		}
 	}
 #pragma endregion
@@ -209,6 +326,7 @@ void GameScene::CheckAllCollitions()
 			{
 				PlayerBullet->OnCollition();
 				Enemy->OnCollition();
+				EnemyHit += 1;
 			}
 		}
 	}
@@ -249,6 +367,7 @@ void GameScene::Encount(Vector3 translate)
 
 void GameScene::LoadEnemyPopData()
 {
+
 	std::ifstream file;
 	file.open("Resources/enemyPop.csv");
 	assert(file.is_open());
@@ -267,7 +386,6 @@ void GameScene::UpdateEnemyPopCommands()
 		}
 		return;
 	}
-	std::string line;
 	while (getline(enemyPopCommands, line))
 	{
 		std::istringstream line_stream(line);

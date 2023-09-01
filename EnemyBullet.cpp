@@ -3,7 +3,7 @@
 void EnemyBullet::Initialise(Model* model, const Vector3& position, const Vector3& velocity) {
 	assert(model);
 	model_ = model;
-	textureHandle_ = TextureManager::Load("ganban.png");
+	textureHandle_ = TextureManager::Load("sand.png");
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = {position.x, position.y, position.z};
 	worldTransform_.matWorld_.m[3][0] = position.x;
@@ -17,6 +17,7 @@ void EnemyBullet::Update()
 	worldTransform_.translation_.x += velocity_.x;
 	worldTransform_.translation_.y += velocity_.y;
 	worldTransform_.translation_.z += velocity_.z;
+	worldTransform_.rotation_.y += 0.4f;
 	worldTransform_.UpdateMatrix();
 	if (--deathTimer_ <= 0) {
 		isDead_ = true;

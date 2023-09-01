@@ -11,6 +11,7 @@ public:
 	void OnCollition();
 	Vector3 GetWorldPosition();
 	bool IsDead() const { return isDead_; }
+	bool isDead_ = false;
 
 	private:
 	WorldTransform worldTransform_;
@@ -18,6 +19,5 @@ public:
 	uint32_t textureHandle_ = 0u;
 	Vector3 velocity_ = {};
 	int32_t deathTimer_ = kLifeTime;
-	bool isDead_ = false;
 	static const int32_t kLifeTime = 60 * 5;
 };
