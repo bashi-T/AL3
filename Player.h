@@ -9,6 +9,7 @@
 #include"RailCamera.h"
 #include "Sprite.h"
 
+
 class Player {
 public:
 	~Player();

@@ -74,19 +74,23 @@ UpdateEnemyPopCommands();
 		}
 		return false;
 	});
-	enemyBullets_.remove_if([](EnemyBullet* bullet) {
-		if (bullet->IsDead()) {
-			delete bullet;
-			return true;
-		}
-		return false;
-	});
+	//enemyBullets_.remove_if([](EnemyBullet* bullet) {
+	//	if (bullet->IsDead()) {
+	//		delete bullet;
+	//		return true;
+	//	}
+	//	return false;
+	//});
 	for (Enemy* enemy : enemys_) {
 		enemy->Update();
+		if (input_->TriggerKey(DIK_SPACE)) {
+			enemy->SetIsDiscover();
+		}
+
 	}
-	for (EnemyBullet* bullet : enemyBullets_) {
-		bullet->Update();
-	}
+	//for (EnemyBullet* bullet : enemyBullets_) {
+	//	bullet->Update();
+	//}
 
 	skydome_->Update();
 
@@ -99,7 +103,7 @@ UpdateEnemyPopCommands();
 //		isDebugCameraActive_ = true;
 //	}
 //#endif
-
+//
 	//if (isDebugCameraActive_) {
 	//	debugCamera_->Update();
 	//	viewProjection_.matView = debugCamera_->

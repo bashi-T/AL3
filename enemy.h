@@ -6,6 +6,7 @@
 #include"ImGuiManager.h"
 #include"list"
 #include"EnemyBullet.h"
+#include<random>
 
 class Player;
 class GameScene;
@@ -30,7 +31,9 @@ public:
 
 	Vector3 GetWorldPosition();
 
-		void OnCollition();
+	void OnCollition();
+
+	void MoveRand();
 
 	enum class Phase {
 		Approach,
@@ -42,6 +45,8 @@ public:
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 	void SetPlayer(Player* player) { player_ = player; }
 	bool IsDead() const { return isDead_; }
+	void SetIsDiscover();
+	int32_t GetIsDiscover() { return IsDiscover; }
 
 private:
 	//EnemyBullet* bullet_ = nullptr;
@@ -56,5 +61,13 @@ private:
 	float kEnemySpeedY = 0.0f;
 	float kEnemySpeedZ = 0.0f;
 	bool isDead_ = false;
+	float enemySpeed = 0.25f;
+	Vector3 distXYZ;
+	int32_t mapsize = 3;
+	int32_t stayTimer = 120;
+	int32_t distinationX;
+	int32_t distinationZ;
+	int32_t IsDiscover = 0;
+	int32_t seekCount = 300;
 };
 

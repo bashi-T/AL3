@@ -1,6 +1,7 @@
 #include "enemy.h"
 #include "Player.h"
 #include"GameScene.h"
+#include<math.h>
 
 Enemy::~Enemy()
 {
@@ -25,21 +26,23 @@ void Enemy::Update()
 	const float kBulletSpeedZ = -0.5f;
 	Vector3 velocity(0, 0, kBulletSpeedZ);
 
-	switch (phase_) {
-	case Phase::Approach:
-	default:
-		Approach();
-		break;
-	case Phase::Leave:
-		Leave();
-		break;
-	}
+	//switch (phase_) {
+	//case Phase::Approach:
+	//default:
+	//	Approach();
+	//	break;
+	//case Phase::Leave:
+	//	Leave();
+	//	break;
+	//}
+
+	MoveRand();
 	worldTransform_.UpdateMatrix();
-	FireTimer--;
-	if (FireTimer == 0) {
-		Fire();
-		FireTimer = kFireInterval;
-	}
+	//FireTimer--;
+	//if (FireTimer == 0) {
+	//	Fire();
+	//	FireTimer = kFireInterval;
+	//}
 }
 
 void Enemy::Draw(const ViewProjection& viewProjection)
@@ -102,3 +105,135 @@ Vector3 Enemy::GetWorldPosition() {
 }
 
 void Enemy::OnCollition() { isDead_ = true; }
+
+void Enemy::MoveRand()
+{
+	worldTransform_.matWorld_.m[3][1] = 0.0f;
+	if (stayTimer == 0)
+	{
+		stayTimer = 121;
+	}
+	if (stayTimer==121)
+	{
+		std::random_device rand;
+		std::mt19937 mt(rand());
+		std::uniform_int_distribution<> randX(-10,10);
+		std::uniform_int_distribution<> randZ(0,20);
+		distinationX = randX(mt);
+		distinationZ = randZ(mt);
+		stayTimer = 120;
+	}
+	if (IsDiscover==0)
+	{
+		distXYZ =
+		{
+			float(distinationX * mapsize),
+			0.0f,
+			float(distinationZ * mapsize)
+		};
+	};
+	if (IsDiscover == 1)
+	{
+		distXYZ =
+		{
+		    player_->GetWorldTransform().matWorld_.m[3][0],
+		    player_->GetWorldTransform().matWorld_.m[3][1],
+		    player_->GetWorldTransform().matWorld_.m[3][2]
+		};
+	}
+	if (IsDiscover == 2&&seekCount==300)
+	{
+		distXYZ =
+		{
+		    player_->GetWorldTransform().matWorld_.m[3][0],
+		    player_->GetWorldTransform().matWorld_.m[3][1],
+		    player_->GetWorldTransform().matWorld_.m[3][2]
+		};
+	}
+	switch(IsDiscover)
+	{
+	case 0:
+		if (worldTransform_.matWorld_.m[3][0] == distXYZ.x) {
+		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x >= enemySpeed) {
+			worldTransform_.translation_.x -= enemySpeed;
+		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x <= -enemySpeed) {
+			worldTransform_.translation_.x += enemySpeed;
+		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x < enemySpeed) {
+			enemySpeed = worldTransform_.matWorld_.m[3][0] - distXYZ.x;
+			worldTransform_.translation_.x -= enemySpeed;
+			enemySpeed = 0.25f;
+		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x > -enemySpeed) {
+			enemySpeed = worldTransform_.matWorld_.m[3][0] - distXYZ.x;
+			worldTransform_.translation_.x += enemySpeed;
+			enemySpeed = 0.25f;
+		}
+
+		if (worldTransform_.matWorld_.m[3][2] == distXYZ.z) {
+		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z >= enemySpeed) {
+			worldTransform_.translation_.z -= enemySpeed;
+		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z <= -enemySpeed) {
+			worldTransform_.translation_.z += enemySpeed;
+		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z < enemySpeed) {
+			enemySpeed = worldTransform_.matWorld_.m[3][2] - distXYZ.z;
+			worldTransform_.translation_.z -= enemySpeed;
+			enemySpeed = 0.25f;
+		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z > -enemySpeed) {
+			enemySpeed = worldTransform_.matWorld_.m[3][2] - distXYZ.z;
+			worldTransform_.translation_.z += enemySpeed;
+			enemySpeed = 0.25f;
+		}
+		if (IsDiscover == 0) {
+			if (worldTransform_.matWorld_.m[3][0] == distXYZ.x) {
+				if (worldTransform_.matWorld_.m[3][2] == distXYZ.z) {
+					stayTimer--;
+				}
+			}
+		}
+	case 1:
+		if (worldTransform_.matWorld_.m[3][0] == distXYZ.x) {
+		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x >= enemySpeed) {
+			worldTransform_.translation_.x -= enemySpeed;
+		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x <= -enemySpeed) {
+			worldTransform_.translation_.x += enemySpeed;
+		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x < enemySpeed) {
+			enemySpeed = worldTransform_.matWorld_.m[3][0] - distXYZ.x;
+			worldTransform_.translation_.x -= enemySpeed;
+			enemySpeed = 0.4f;
+		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x > -enemySpeed) {
+			enemySpeed = worldTransform_.matWorld_.m[3][0] - distXYZ.x;
+			worldTransform_.translation_.x += enemySpeed;
+			enemySpeed = 0.4f;
+		}
+
+		if (worldTransform_.matWorld_.m[3][2] == distXYZ.z) {
+		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z >= enemySpeed) {
+			worldTransform_.translation_.z -= enemySpeed;
+		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z <= -enemySpeed) {
+			worldTransform_.translation_.z += enemySpeed;
+		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z < enemySpeed) {
+			enemySpeed = worldTransform_.matWorld_.m[3][2] - distXYZ.z;
+			worldTransform_.translation_.z -= enemySpeed;
+			enemySpeed = 0.4f;
+		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z > -enemySpeed) {
+			enemySpeed = worldTransform_.matWorld_.m[3][2] - distXYZ.z;
+			worldTransform_.translation_.z += enemySpeed;
+			enemySpeed = 0.4f;
+		}
+
+	}
+	if (IsDiscover == 2)
+	{
+		seekCount--;
+	}
+	if (seekCount == 0)
+	{
+		seekCount = 300;
+		IsDiscover = 0;
+	}
+}
+
+void Enemy::SetIsDiscover() 
+{
+	IsDiscover++;
+}
+	

@@ -55,43 +55,44 @@ void Player::Update(const ViewProjection viewProjection) {
 	ImGui::InputFloat3("translation", inputtranslate3);
 	ImGui::End();
 
-	worldTransform_.matWorld_.m[3][0] =
-	    max(worldTransform_.matWorld_.m[3][0], -kMoveLimitX);
-	worldTransform_.matWorld_.m[3][0] =
-	    min(worldTransform_.matWorld_.m[3][0], +kMoveLimitX);
-	worldTransform_.matWorld_.m[3][1] =
-		max(worldTransform_.matWorld_.m[3][1], -kMoveLimitY);
-	worldTransform_.matWorld_.m[3][1] =
-		min(worldTransform_.matWorld_.m[3][1], +kMoveLimitY);
+	//worldTransform_.matWorld_.m[3][0] =
+	//    max(worldTransform_.matWorld_.m[3][0], -kMoveLimitX);
+	//worldTransform_.matWorld_.m[3][0] =
+	//    min(worldTransform_.matWorld_.m[3][0], +kMoveLimitX);
+	//worldTransform_.matWorld_.m[3][1] =
+	//	max(worldTransform_.matWorld_.m[3][1], -kMoveLimitY);
+	//worldTransform_.matWorld_.m[3][1] =
+	//	min(worldTransform_.matWorld_.m[3][1], +kMoveLimitY);
 
 
-	const float kDistancePlayerTo3DReticle = 50.0f;
-	Vector3 offset = {0, 0, 1.0f};
-	offset = TransformNormal(offset, worldTransform_.matWorld_);
-	offset = Multiply(kDistancePlayerTo3DReticle ,Normalize(offset));
-	worldTransform3Dreticle_.translation_ = Transform(offset, worldTransform_.matWorld_);
-	worldTransform3Dreticle_.UpdateMatrix();
 
-	Vector3 positionReticle =
-    {
-	        worldTransform3Dreticle_.matWorld_.m[3][0],
-	        worldTransform3Dreticle_.matWorld_.m[3][1],
-	        worldTransform3Dreticle_.matWorld_.m[3][2]
-	};
-	Matrix4x4 matViewport = MakeViewportMatrix(
-			offset.x,
-			offset.y,
-			WinApp::kWindowWidth,
-			WinApp::kWindowHeight,
-			0,
-			1);
+	//const float kDistancePlayerTo3DReticle = 50.0f;
+	//Vector3 offset = {0, 0, 1.0f};
+	//offset = TransformNormal(offset, worldTransform_.matWorld_);
+	//offset = Multiply(kDistancePlayerTo3DReticle ,Normalize(offset));
+	//worldTransform3Dreticle_.translation_ = Transform(offset, worldTransform_.matWorld_);
+	//worldTransform3Dreticle_.UpdateMatrix();
 
-	Matrix4x4 matViewProjectionViewport =
-	    Multiply(viewProjection.matView, viewProjection.matProjection);
-	matViewProjectionViewport =
-		Multiply(matViewProjectionViewport, matViewport);
+	//Vector3 positionReticle =
+ //   {
+	//        worldTransform3Dreticle_.matWorld_.m[3][0],
+	//        worldTransform3Dreticle_.matWorld_.m[3][1],
+	//        worldTransform3Dreticle_.matWorld_.m[3][2]
+	//};
+	//Matrix4x4 matViewport = MakeViewportMatrix(
+	//		offset.x,
+	//		offset.y,
+	//		WinApp::kWindowWidth,
+	//		WinApp::kWindowHeight,
+	//		0,
+	//		1);
 
-	positionReticle = Transform(positionReticle, matViewProjectionViewport);
+	//Matrix4x4 matViewProjectionViewport =
+	//    Multiply(viewProjection.matView, viewProjection.matProjection);
+	//matViewProjectionViewport =
+	//	Multiply(matViewProjectionViewport, matViewport);
+
+	//positionReticle = Transform(positionReticle, matViewProjectionViewport);
 	//sprite2DReticle_->SetPosition(Vector2(positionReticle.x, positionReticle.y));
 
 	//POINT mousePosition;
@@ -99,40 +100,37 @@ void Player::Update(const ViewProjection viewProjection) {
 	//HWND hwnd = WinApp::GetInstance()->GetHwnd();
 	//ScreenToClient(hwnd, &spritePosition);
 	//sprite2DReticle_->SetPosition(Vector2((float)mousePosition.x,(float)mousePosition.y));
+	//Vector2 spritePosition = sprite2DReticle_->GetPosition();
 
-	Vector2 spritePosition = sprite2DReticle_->GetPosition();
+	//XINPUT_STATE joyState;
+	//if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+	//   spritePosition.x += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * 10.0f;
+	//   spritePosition.y -= (float)joyState.Gamepad.sThumbRY / SHRT_MAX * 10.0f;
+	//   sprite2DReticle_->SetPosition(spritePosition);
+	//}
+	//Matrix4x4 matVPV = Multiply(viewProjection.matView, viewProjection.matProjection);
+	//matVPV = Multiply(matVPV, matViewport);
+	//Matrix4x4 matInverseVPV = Inverse(matVPV);
 
-	XINPUT_STATE joyState;
-	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-	   spritePosition.x += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * 10.0f;
-	   spritePosition.y -= (float)joyState.Gamepad.sThumbRY / SHRT_MAX * 10.0f;
-	   sprite2DReticle_->SetPosition(spritePosition);
-	}
+	//Vector3 posNear =
+	//    Vector3(
+	//		sprite2DReticle_->GetPosition().x,
+	//		sprite2DReticle_->GetPosition().y,
+	//		0);
+	//Vector3 posFar =
+	//    Vector3(
+	//		sprite2DReticle_->GetPosition().x,
+	//		sprite2DReticle_->GetPosition().y,
+	//		1);
+	//posNear = Transform(posNear, matInverseVPV);
+	//posFar = Transform(posFar, matInverseVPV);
 
-
-	Matrix4x4 matVPV = Multiply(viewProjection.matView, viewProjection.matProjection);
-	matVPV = Multiply(matVPV, matViewport);
-	Matrix4x4 matInverseVPV = Inverse(matVPV);
-
-	Vector3 posNear =
-	    Vector3(
-			sprite2DReticle_->GetPosition().x,
-			sprite2DReticle_->GetPosition().y,
-			0);
-	Vector3 posFar =
-	    Vector3(
-			sprite2DReticle_->GetPosition().x,
-			sprite2DReticle_->GetPosition().y,
-			1);
-	posNear = Transform(posNear, matInverseVPV);
-	posFar = Transform(posFar, matInverseVPV);
-
-	Vector3 ReticleDirection = Subtract(posNear, posFar);
-	ReticleDirection = Normalize(ReticleDirection);
-	const float kDistanceTestObject = -80;
-	worldTransform3Dreticle_.translation_ =
-	    Add(posNear, Multiply(kDistanceTestObject, ReticleDirection));
-	worldTransform3Dreticle_.UpdateMatrix();
+	//Vector3 ReticleDirection = Subtract(posNear, posFar);
+	//ReticleDirection = Normalize(ReticleDirection);
+	//const float kDistanceTestObject = -80;
+	//worldTransform3Dreticle_.translation_ =
+	//    Add(posNear, Multiply(kDistanceTestObject, ReticleDirection));
+	//worldTransform3Dreticle_.UpdateMatrix();
 
 	//ImGui::Begin("Player");
 	//ImGui::Text("2DReticle:(%f,%f)",
