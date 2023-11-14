@@ -6,14 +6,16 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {
+GameScene::~GameScene()
+{
 	delete model_;
 	delete player_;
 	delete debugCamera_;
 	//delete enemy_;
 	delete modelSkydome_;
 	delete railCamera_;
-	for (EnemyBullet* bullet : enemyBullets_) {
+	for (EnemyBullet* bullet : enemyBullets_)
+	{
 		delete bullet;
 	}
 	for (Enemy* enemy : enemys_) {
@@ -81,9 +83,11 @@ UpdateEnemyPopCommands();
 	//	}
 	//	return false;
 	//});
-	for (Enemy* enemy : enemys_) {
+	for (Enemy* enemy : enemys_)
+	{
 		enemy->Update();
-		if (input_->TriggerKey(DIK_SPACE)) {
+		if (input_->TriggerKey(DIK_SPACE))
+		{
 			enemy->SetIsDiscover();
 		}
 
@@ -118,7 +122,8 @@ UpdateEnemyPopCommands();
 	//}
 }
 
-void GameScene::Draw() {
+void GameScene::Draw()
+{
 
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
@@ -149,7 +154,8 @@ void GameScene::Draw() {
 	for (Enemy*enemy:enemys_) {
 		enemy->Draw(viewProjection_);
 	}
-	for (EnemyBullet* bullet : enemyBullets_) {
+	for (EnemyBullet* bullet : enemyBullets_)
+	{
 		bullet->Draw(viewProjection_);
 	}
 

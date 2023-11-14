@@ -10,7 +10,8 @@
 #include "Sprite.h"
 
 
-class Player {
+class Player
+{
 public:
 	~Player();
 	/// <summary>

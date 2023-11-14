@@ -5,7 +5,8 @@
 #include<Input.h>
 #include"ImGuiManager.h"
 
-class RailCamera {
+class RailCamera
+{
 public:
 	void Initialize(Vector3 translate, Vector3 radian);
 

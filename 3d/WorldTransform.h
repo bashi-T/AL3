@@ -8,14 +8,16 @@
 
 
 // 定数バッファ用データ構造体
-struct ConstBufferDataWorldTransform {
+struct ConstBufferDataWorldTransform
+{
 	Matrix4x4 matWorld; // ローカル → ワールド変換行列
 };
 
 /// <summary>
 /// ワールド変換データ
 /// </summary>
-struct WorldTransform {
+struct WorldTransform
+{
 	// 定数バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
 	// マッピング済みアドレス

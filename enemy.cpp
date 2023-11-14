@@ -7,7 +7,8 @@ Enemy::~Enemy()
 {
 }
 
-void Enemy::Initialise(Model* model,Vector3 translate) {
+void Enemy::Initialise(Model* model,Vector3 translate)
+{
 	assert(model);
 	model_ = model;
 	textureHandle_ = TextureManager::Load("sand.png");
@@ -50,7 +51,8 @@ void Enemy::Draw(const ViewProjection& viewProjection)
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 }
 
-void Enemy::Approach() {
+void Enemy::Approach()
+{
 	kEnemySpeedZ = -0.5f;
 	worldTransform_.translation_.x += kEnemySpeedX;
 	worldTransform_.translation_.y += kEnemySpeedY;
@@ -60,7 +62,8 @@ void Enemy::Approach() {
 	}
 }
 
-void Enemy::Leave() {
+void Enemy::Leave()
+{
 	kEnemySpeedZ = 0.5f;
 	worldTransform_.translation_.x += kEnemySpeedX;
 	worldTransform_.translation_.y += kEnemySpeedY;
@@ -71,7 +74,8 @@ void Enemy::Leave() {
 	}
 }
 
-void Enemy::Fire() {
+void Enemy::Fire()
+{
 	assert(player_);
 	assert(gameScene_);
 	float kBulletSpeedX = -1.0f;
@@ -96,7 +100,8 @@ void Enemy::ResetApproach()
 	FireTimer = 10;
 }
 
-Vector3 Enemy::GetWorldPosition() {
+Vector3 Enemy::GetWorldPosition()
+{
 	Vector3 worldPos;
 	worldPos.x = worldTransform_.matWorld_.m[3][0];
 	worldPos.y = worldTransform_.matWorld_.m[3][1];
@@ -153,82 +158,101 @@ void Enemy::MoveRand()
 	switch(IsDiscover)
 	{
 	case 0:
-		if (worldTransform_.matWorld_.m[3][0] == distXYZ.x) {
-		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x >= enemySpeed) {
+		if (worldTransform_.matWorld_.m[3][0] == distXYZ.x)
+		{
+		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x >= enemySpeed)
+		{
 			worldTransform_.translation_.x -= enemySpeed;
-		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x <= -enemySpeed) {
+		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x <= -enemySpeed)
+		{
 			worldTransform_.translation_.x += enemySpeed;
-		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x < enemySpeed) {
+		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x < enemySpeed)
+		{
 			enemySpeed = worldTransform_.matWorld_.m[3][0] - distXYZ.x;
 			worldTransform_.translation_.x -= enemySpeed;
 			enemySpeed = 0.25f;
-		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x > -enemySpeed) {
+		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x > -enemySpeed)
+		{
 			enemySpeed = worldTransform_.matWorld_.m[3][0] - distXYZ.x;
 			worldTransform_.translation_.x += enemySpeed;
 			enemySpeed = 0.25f;
 		}
 
-		if (worldTransform_.matWorld_.m[3][2] == distXYZ.z) {
-		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z >= enemySpeed) {
+		if (worldTransform_.matWorld_.m[3][2] == distXYZ.z)
+		{
+		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z >= enemySpeed)
+		{
 			worldTransform_.translation_.z -= enemySpeed;
-		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z <= -enemySpeed) {
+		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z <= -enemySpeed)
+		{
 			worldTransform_.translation_.z += enemySpeed;
-		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z < enemySpeed) {
+		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z < enemySpeed)
+		{
 			enemySpeed = worldTransform_.matWorld_.m[3][2] - distXYZ.z;
 			worldTransform_.translation_.z -= enemySpeed;
 			enemySpeed = 0.25f;
-		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z > -enemySpeed) {
+		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z > -enemySpeed)
+		{
 			enemySpeed = worldTransform_.matWorld_.m[3][2] - distXYZ.z;
 			worldTransform_.translation_.z += enemySpeed;
 			enemySpeed = 0.25f;
 		}
 		if (IsDiscover == 0) {
-			if (worldTransform_.matWorld_.m[3][0] == distXYZ.x) {
-				if (worldTransform_.matWorld_.m[3][2] == distXYZ.z) {
+			if (worldTransform_.matWorld_.m[3][0] == distXYZ.x)
+			{
+				if (worldTransform_.matWorld_.m[3][2] == distXYZ.z)
+				{
 					stayTimer--;
 				}
 			}
 		}
 	case 1:
-		if (worldTransform_.matWorld_.m[3][0] == distXYZ.x) {
-		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x >= enemySpeed) {
+		if (worldTransform_.matWorld_.m[3][0] == distXYZ.x)
+		{
+		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x >= enemySpeed)
+		{
 			worldTransform_.translation_.x -= enemySpeed;
-		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x <= -enemySpeed) {
+		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x <= -enemySpeed)
+		{
 			worldTransform_.translation_.x += enemySpeed;
-		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x < enemySpeed) {
+		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x < enemySpeed)
+		{
 			enemySpeed = worldTransform_.matWorld_.m[3][0] - distXYZ.x;
 			worldTransform_.translation_.x -= enemySpeed;
 			enemySpeed = 0.4f;
-		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x > -enemySpeed) {
+		} else if (worldTransform_.matWorld_.m[3][0] - distXYZ.x > -enemySpeed)
+		{
 			enemySpeed = worldTransform_.matWorld_.m[3][0] - distXYZ.x;
 			worldTransform_.translation_.x += enemySpeed;
 			enemySpeed = 0.4f;
 		}
 
-		if (worldTransform_.matWorld_.m[3][2] == distXYZ.z) {
-		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z >= enemySpeed) {
+		if (worldTransform_.matWorld_.m[3][2] == distXYZ.z)
+		{
+		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z >= enemySpeed)
+		{
 			worldTransform_.translation_.z -= enemySpeed;
-		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z <= -enemySpeed) {
+		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z <= -enemySpeed)
+		{
 			worldTransform_.translation_.z += enemySpeed;
-		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z < enemySpeed) {
+		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z < enemySpeed)
+		{
 			enemySpeed = worldTransform_.matWorld_.m[3][2] - distXYZ.z;
 			worldTransform_.translation_.z -= enemySpeed;
 			enemySpeed = 0.4f;
-		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z > -enemySpeed) {
+		} else if (worldTransform_.matWorld_.m[3][2] - distXYZ.z > -enemySpeed)
+		{
 			enemySpeed = worldTransform_.matWorld_.m[3][2] - distXYZ.z;
 			worldTransform_.translation_.z += enemySpeed;
 			enemySpeed = 0.4f;
 		}
-
-	}
-	if (IsDiscover == 2)
-	{
+	case 2:
 		seekCount--;
-	}
-	if (seekCount == 0)
-	{
-		seekCount = 300;
-		IsDiscover = 0;
+		if (seekCount == 0)
+		{
+			seekCount = 300;
+			IsDiscover = 0;
+		}
 	}
 }
 

@@ -8,7 +8,8 @@ Player::~Player()
 	}
 	delete sprite2DReticle_;
 }
-void Player::Initialize(Model* model, uint32_t textureHandle,Vector3 playerPosition) {
+void Player::Initialize(Model* model, uint32_t textureHandle,Vector3 playerPosition)
+{
 	assert(model);
 
 	model_ = model;
@@ -29,7 +30,8 @@ void Player::Initialize(Model* model, uint32_t textureHandle,Vector3 playerPosit
 	worldTransform3Dreticle_.Initialize();
 };
 
-void Player::Update(const ViewProjection viewProjection) {
+void Player::Update(const ViewProjection viewProjection)
+{
 	bullets_.remove_if([](PlayerBullet* bullet) {
 		if (bullet->IsDead()) {
 			delete bullet;
@@ -63,8 +65,6 @@ void Player::Update(const ViewProjection viewProjection) {
 	//	max(worldTransform_.matWorld_.m[3][1], -kMoveLimitY);
 	//worldTransform_.matWorld_.m[3][1] =
 	//	min(worldTransform_.matWorld_.m[3][1], +kMoveLimitY);
-
-
 
 	//const float kDistancePlayerTo3DReticle = 50.0f;
 	//Vector3 offset = {0, 0, 1.0f};
@@ -145,7 +145,8 @@ void Player::Update(const ViewProjection viewProjection) {
 	//ImGui::End();   
 
 	Attack();
-	for (PlayerBullet* bullet : bullets_) {
+	for (PlayerBullet* bullet : bullets_)
+	{
 	   bullet->Update();
 	}
 }
@@ -162,7 +163,6 @@ void Player::Translate()
 	   move.x += (float)joyState.Gamepad.sThumbLX / SHRT_MAX * kCharacterSpeed;
 	   move.y += (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed;
 	}
-
 
 	//if (input_->PushKey(DIK_LEFT))
 	//{

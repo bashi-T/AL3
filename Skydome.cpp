@@ -1,6 +1,7 @@
 #include "Skydome.h"
 
-void Skydome::Initialize(Model* model) {
+void Skydome::Initialize(Model* model)
+{
 	assert(model);
 
 	model_ = model;

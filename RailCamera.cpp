@@ -50,10 +50,12 @@ void RailCamera::Translate()
 	Vector3 move = {0, 0, 0};
 	const float kCameraSpeed = 0.4f;
 
-	if (input_->PushKey(DIK_LEFT)) {
+	if (input_->PushKey(DIK_LEFT))
+	{
 		move.x -= kCameraSpeed;
 	}
-	if (input_->PushKey(DIK_RIGHT)) {
+	if (input_->PushKey(DIK_RIGHT))
+	{
 		move.x += kCameraSpeed;
 	}
 	//if (input_->PushKey(DIK_T)) {
@@ -62,10 +64,12 @@ void RailCamera::Translate()
 	//if (input_->PushKey(DIK_B)) {
 	//	move.y -= kCameraSpeed;
 	//}
-	if (input_->PushKey(DIK_UP)) {
+	if (input_->PushKey(DIK_UP))
+	{
 		move.z += kCameraSpeed;
 	}
-	if (input_->PushKey(DIK_DOWN)) {
+	if (input_->PushKey(DIK_DOWN))
+	{
 		move.z -= kCameraSpeed;
 	}
 
@@ -80,10 +84,12 @@ void RailCamera::Rotate()
 
 	const float kRotSpeed = 0.02f;
 
-	if (input_->PushKey(DIK_R)) {
+	if (input_->PushKey(DIK_R))
+	{
 		rotate.y += kRotSpeed;
 	}
-	if (input_->PushKey(DIK_Q)) {
+	if (input_->PushKey(DIK_Q))
+	{
 		rotate.y -= kRotSpeed;
 	}
 	//if (input_->PushKey(DIK_W)) {
@@ -92,10 +98,12 @@ void RailCamera::Rotate()
 	//if (input_->PushKey(DIK_X)) {
 	//	rotate.x -= kRotSpeed;
 	//}
-	if (input_->PushKey(DIK_E)) {
+	if (input_->PushKey(DIK_E))
+	{
 		rotate.z += kRotSpeed;
 	}
-	if (input_->PushKey(DIK_W)) {
+	if (input_->PushKey(DIK_W))
+	{
 		rotate.z -= kRotSpeed;
 	}
 
