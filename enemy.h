@@ -69,5 +69,9 @@ private:
 	int32_t distinationZ;
 	int32_t IsDiscover = 0;
 	int32_t seekCount = 300;
+	
+	struct Sight {
+
+	};
 };
 

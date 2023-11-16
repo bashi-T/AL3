@@ -197,15 +197,14 @@ void Enemy::MoveRand()
 			worldTransform_.translation_.z += enemySpeed;
 			enemySpeed = 0.25f;
 		}
-		if (IsDiscover == 0) {
-			if (worldTransform_.matWorld_.m[3][0] == distXYZ.x)
+		if (worldTransform_.matWorld_.m[3][0] == distXYZ.x)
+		{
+			if (worldTransform_.matWorld_.m[3][2] == distXYZ.z)
 			{
-				if (worldTransform_.matWorld_.m[3][2] == distXYZ.z)
-				{
-					stayTimer--;
-				}
+				stayTimer--;
 			}
 		}
+		break;
 	case 1:
 		if (worldTransform_.matWorld_.m[3][0] == distXYZ.x)
 		{
@@ -246,6 +245,7 @@ void Enemy::MoveRand()
 			worldTransform_.translation_.z += enemySpeed;
 			enemySpeed = 0.4f;
 		}
+		break;
 	case 2:
 		seekCount--;
 		if (seekCount == 0)
@@ -253,6 +253,7 @@ void Enemy::MoveRand()
 			seekCount = 300;
 			IsDiscover = 0;
 		}
+		break;
 	}
 }
 

@@ -154,7 +154,7 @@ void Player::Update(const ViewProjection viewProjection)
 void Player::Translate()
 {
 	Vector3 move = {0, 0, 0};
-	const float kCharacterSpeed = 0.4f;
+	const float kCharacterSpeed = 0.6f;
 
 	XINPUT_STATE joyState;
 
