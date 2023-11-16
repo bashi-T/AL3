@@ -299,3 +299,33 @@ void GameScene::UpdateEnemyPopCommands()
 		}
 	}
 }
+
+bool GameScene::CheckSight()
+{
+	Vector3 lineP[4] =
+	{ 
+		{player_->GetPlayerCorner(0).x - player_->GetPlayerCorner(1).x,
+		 player_->GetPlayerCorner(0).y - player_->GetPlayerCorner(1).y,
+		 player_->GetPlayerCorner(0).z - player_->GetPlayerCorner(1).z},
+
+		{player_->GetPlayerCorner(0).x - player_->GetPlayerCorner(1).x,
+		 player_->GetPlayerCorner(0).y - player_->GetPlayerCorner(1).y,
+		 player_->GetPlayerCorner(0).z - player_->GetPlayerCorner(1).z},
+
+		{player_->GetPlayerCorner(0).x - player_->GetPlayerCorner(1).x,
+		 player_->GetPlayerCorner(0).y - player_->GetPlayerCorner(1).y,
+		 player_->GetPlayerCorner(0).z - player_->GetPlayerCorner(1).z},
+
+		{player_->GetPlayerCorner(0).x - player_->GetPlayerCorner(1).x,
+		 player_->GetPlayerCorner(0).y - player_->GetPlayerCorner(1).y,
+		 player_->GetPlayerCorner(0).z - player_->GetPlayerCorner(1).z}
+	
+	}
+
+	if ()
+	{
+		return true;
+	} else {
+		return false;
+	}
+};

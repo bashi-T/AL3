@@ -31,11 +31,14 @@ public:
 
 	void OnCollition();
 
+	void SetCollition();
+
 	void SetParent(const WorldTransform* parent);
 
 	Vector3 GetWorldPosition();
 	WorldTransform GetWorldTransform() { return worldTransform_; }
 	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
+	Vector3 GetPlayerCorner(uint32_t i) { return PlayerCorner[i]; }
 
 	/// <summary>
 	/// 
@@ -45,7 +48,7 @@ public:
 
 	void DrawUI();
 
-	std::list<PlayerBullet*>bullets_;
+	std::list<PlayerBullet*> bullets_;
 
 	const float kMoveLimitX = 33;
 	const float kMoveLimitY = 18;
@@ -63,4 +66,5 @@ private:
 	float inputWorld3[3] = {0, 0, 0};
 	float inputtranslate3[3] = {0, 0, 0};
 	Sprite* sprite2DReticle_ = nullptr;
+	Vector3 PlayerCorner[4];
 };

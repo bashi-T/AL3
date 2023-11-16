@@ -7,6 +7,7 @@
 #include"list"
 #include"EnemyBullet.h"
 #include<random>
+#include"ALVector.h"
 
 class Player;
 class GameScene;
@@ -35,6 +36,8 @@ public:
 
 	void MoveRand();
 
+	void SetSight();
+
 	enum class Phase {
 		Approach,
 		Leave,
@@ -47,8 +50,20 @@ public:
 	bool IsDead() const { return isDead_; }
 	void SetIsDiscover();
 	int32_t GetIsDiscover() { return IsDiscover; }
+	
+	private:
+	struct Sight
+	{
+		Vector3 SightLeft{};
+		Vector3 SightRight{};
+		float angle = 60.0f;
+		float range=5.0f;
+	}sight;
 
-private:
+public:
+	Sight GetSight() { return sight; }
+
+	private:
 	//EnemyBullet* bullet_ = nullptr;
 	GameScene* gameScene_ = nullptr;
 	Player* player_ = nullptr;
@@ -70,8 +85,5 @@ private:
 	int32_t IsDiscover = 0;
 	int32_t seekCount = 300;
 	
-	struct Sight {
-
-	};
 };
 

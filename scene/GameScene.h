@@ -53,6 +53,8 @@ public: // メンバ関数
 
 	void UpdateEnemyPopCommands();
 
+	bool CheckSight();
+	
 	std::list<EnemyBullet*> enemyBullets_;
 	const std::list<EnemyBullet*> GetBullets() const { return enemyBullets_; }
 	std::list<Enemy*> enemys_;

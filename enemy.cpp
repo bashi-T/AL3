@@ -44,6 +44,8 @@ void Enemy::Update()
 	//	Fire();
 	//	FireTimer = kFireInterval;
 	//}
+
+	SetSight();
 }
 
 void Enemy::Draw(const ViewProjection& viewProjection)
@@ -255,6 +257,23 @@ void Enemy::MoveRand()
 		}
 		break;
 	}
+}
+
+void Enemy::SetSight()
+{
+	sight.SightLeft =
+	{
+	    worldTransform_.matWorld_.m[3][0] + cos(sight.angle) * sight.range,
+	    worldTransform_.matWorld_.m[3][1],
+	    worldTransform_.matWorld_.m[3][2] + sin(sight.angle) * sight.range
+	};
+	
+	sight.SightRight =
+	{
+	    worldTransform_.matWorld_.m[3][0] - cos(sight.angle) * sight.range,
+	    worldTransform_.matWorld_.m[3][1],
+	    worldTransform_.matWorld_.m[3][2] - sin(sight.angle) * sight.range
+	};
 }
 
 void Enemy::SetIsDiscover() 

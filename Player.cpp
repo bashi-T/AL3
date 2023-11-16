@@ -28,6 +28,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle,Vector3 playerPosit
 	worldTransform_.matWorld_.m[3][1] = playerPosition.y;
 	worldTransform_.matWorld_.m[3][2] = playerPosition.z;
 	worldTransform3Dreticle_.Initialize();
+
 };
 
 void Player::Update(const ViewProjection viewProjection)
@@ -45,6 +46,7 @@ void Player::Update(const ViewProjection viewProjection)
 	Rotate();
 
 	worldTransform_.UpdateMatrix();
+	SetCollition();
 
 	ImGui::Begin("player");
 	inputWorld3[0] = worldTransform_.matWorld_.m[3][0];
@@ -234,6 +236,35 @@ void Player::Attack()
 
 void Player::OnCollition()
 {
+
+}
+
+void Player::SetCollition()
+{
+		PlayerCorner[0] =//rightfront
+	{ 
+		worldTransform_.matWorld_.m[3][0] + 2.0f,
+		worldTransform_.matWorld_.m[3][1],
+		worldTransform_.matWorld_.m[3][2] + 2.0f
+	};
+	PlayerCorner[1] =//rightback
+	{ 
+		worldTransform_.matWorld_.m[3][0] + 2.0f,
+		worldTransform_.matWorld_.m[3][1],
+		worldTransform_.matWorld_.m[3][2] - 2.0f
+	};
+	PlayerCorner[2] =//leftfront
+	{ 
+		worldTransform_.matWorld_.m[3][0] - 2.0f,
+		worldTransform_.matWorld_.m[3][1],
+		worldTransform_.matWorld_.m[3][2] + 2.0f
+	};
+	PlayerCorner[3] =//leftback
+	{ 
+		worldTransform_.matWorld_.m[3][0] - 2.0f,
+		worldTransform_.matWorld_.m[3][1],
+		worldTransform_.matWorld_.m[3][2] - 2.0f
+	};
 
 }
 
