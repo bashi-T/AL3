@@ -241,7 +241,7 @@ void Player::OnCollition()
 
 void Player::SetCollition()
 {
-		PlayerCorner[0] =//rightfront
+	PlayerCorner[0] =//rightfront
 	{ 
 		worldTransform_.matWorld_.m[3][0] + 2.0f,
 		worldTransform_.matWorld_.m[3][1],

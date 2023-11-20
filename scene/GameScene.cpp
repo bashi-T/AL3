@@ -303,29 +303,181 @@ void GameScene::UpdateEnemyPopCommands()
 bool GameScene::CheckSight()
 {
 	Vector3 lineP[4] =
-	{ 
-		{player_->GetPlayerCorner(0).x - player_->GetPlayerCorner(1).x,
-		 player_->GetPlayerCorner(0).y - player_->GetPlayerCorner(1).y,
-		 player_->GetPlayerCorner(0).z - player_->GetPlayerCorner(1).z},
-
-		{player_->GetPlayerCorner(0).x - player_->GetPlayerCorner(1).x,
-		 player_->GetPlayerCorner(0).y - player_->GetPlayerCorner(1).y,
-		 player_->GetPlayerCorner(0).z - player_->GetPlayerCorner(1).z},
-
-		{player_->GetPlayerCorner(0).x - player_->GetPlayerCorner(1).x,
-		 player_->GetPlayerCorner(0).y - player_->GetPlayerCorner(1).y,
-		 player_->GetPlayerCorner(0).z - player_->GetPlayerCorner(1).z},
-
-		{player_->GetPlayerCorner(0).x - player_->GetPlayerCorner(1).x,
-		 player_->GetPlayerCorner(0).y - player_->GetPlayerCorner(1).y,
-		 player_->GetPlayerCorner(0).z - player_->GetPlayerCorner(1).z}
-	
-	}
-
-	if ()
 	{
-		return true;
-	} else {
-		return false;
-	}
+	    {player_->GetPlayerCorner(0).x,
+	     player_->GetPlayerCorner(0).y,
+	     player_->GetPlayerCorner(0).z},
+
+	    {player_->GetPlayerCorner(1).x,
+	     player_->GetPlayerCorner(1).y,
+	     player_->GetPlayerCorner(1).z},
+
+	    {player_->GetPlayerCorner(3).x,
+	     player_->GetPlayerCorner(3).y,
+	     player_->GetPlayerCorner(3).z},
+
+	    {player_->GetPlayerCorner(2).x,
+	     player_->GetPlayerCorner(2).y,
+	     player_->GetPlayerCorner(2).z}
+    };
+	const std::list<Enemy*>& enemys = GetEnemys();
+	for (Enemy* Enemy : enemys)
+	{
+		Vector3 lineS[3] =
+		{
+		    {Enemy->GetSight().SightLeft.x - Enemy->GetWorldPosition().x,
+		     Enemy->GetSight().SightLeft.y - Enemy->GetWorldPosition().y,
+		     Enemy->GetSight().SightLeft.z - Enemy->GetWorldPosition().z   },
+
+		    {Enemy->GetSight().SightRight.x - Enemy->GetWorldPosition().x,
+		     Enemy->GetSight().SightRight.y - Enemy->GetWorldPosition().y,
+		     Enemy->GetSight().SightRight.z - Enemy->GetWorldPosition().z  },
+
+		    {Enemy->GetSight().SightLeft.x - Enemy->GetSight().SightRight.x,
+		     Enemy->GetSight().SightLeft.y - Enemy->GetSight().SightRight.y,
+		     Enemy->GetSight().SightLeft.z - Enemy->GetSight().SightRight.z},
+		};
+		float intersectPointA[12] =
+		{
+		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) *//x3.x4
+		    (player_->GetPlayerCorner(0).z - Enemy->GetWorldPosition().z) +//y1.y3
+		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) *//y3.y4
+		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(0).x),//x3.x1
+
+		    (Enemy->GetSight().SightLeft.x - Enemy->GetSight().SightRight.x) *
+		    (player_->GetPlayerCorner(0).z - Enemy->GetSight().SightLeft.z) +
+		    (Enemy->GetSight().SightLeft.z - Enemy->GetSight().SightRight.z) *
+		    (Enemy->GetSight().SightLeft.x - player_->GetPlayerCorner(0).x),
+
+		    (Enemy->GetSight().SightRight.x - Enemy->GetWorldPosition().x) *
+		    (player_->GetPlayerCorner(0).z - Enemy->GetSight().SightRight.z) +
+		    (Enemy->GetSight().SightRight.z - Enemy->GetWorldPosition().z) *
+		    (Enemy->GetSight().SightRight.x - player_->GetPlayerCorner(0).x),
+
+
+		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) *//x3.x4
+		    (player_->GetPlayerCorner(1).z - Enemy->GetWorldPosition().z) +//y1.y3
+		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) *//y3.y4
+		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(1).x),//x3.x1
+
+		    (Enemy->GetSight().SightLeft.x - Enemy->GetSight().SightRight.x) *
+		    (player_->GetPlayerCorner(1).z - Enemy->GetSight().SightLeft.z) +
+		    (Enemy->GetSight().SightLeft.z - Enemy->GetSight().SightRight.z) *
+		    (Enemy->GetSight().SightLeft.x - player_->GetPlayerCorner(1).x),
+
+		    (Enemy->GetSight().SightRight.x - Enemy->GetWorldPosition().x) *
+		    (player_->GetPlayerCorner(1).z - Enemy->GetSight().SightRight.z) +
+		    (Enemy->GetSight().SightRight.z - Enemy->GetWorldPosition().z) *
+		    (Enemy->GetSight().SightRight.x - player_->GetPlayerCorner(1).x),
+
+
+		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) *//x3.x4
+		    (player_->GetPlayerCorner(3).z - Enemy->GetWorldPosition().z) +//y1.y3
+		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) *//y3.y4
+		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(3).x),//x3.x1
+
+		    (Enemy->GetSight().SightLeft.x - Enemy->GetSight().SightRight.x) *
+		    (player_->GetPlayerCorner(3).z - Enemy->GetSight().SightLeft.z) +
+		    (Enemy->GetSight().SightLeft.z - Enemy->GetSight().SightRight.z) *
+		    (Enemy->GetSight().SightLeft.x - player_->GetPlayerCorner(3).x),
+
+		    (Enemy->GetSight().SightRight.x - Enemy->GetWorldPosition().x) *
+		    (player_->GetPlayerCorner(3).z - Enemy->GetSight().SightRight.z) +
+		    (Enemy->GetSight().SightRight.z - Enemy->GetWorldPosition().z) *
+		    (Enemy->GetSight().SightRight.x - player_->GetPlayerCorner(3).x),
+
+
+		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) *//x3.x4
+		    (player_->GetPlayerCorner(2).z - Enemy->GetWorldPosition().z) +//y1.y3
+		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) *//y3.y4
+		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(2).x),//x3.x1
+
+		    (Enemy->GetSight().SightLeft.x - Enemy->GetSight().SightRight.x) *
+		    (player_->GetPlayerCorner(2).z - Enemy->GetSight().SightLeft.z) +
+		    (Enemy->GetSight().SightLeft.z - Enemy->GetSight().SightRight.z) *
+		    (Enemy->GetSight().SightLeft.x - player_->GetPlayerCorner(2).x),
+
+		    (Enemy->GetSight().SightRight.x - Enemy->GetWorldPosition().x) *
+		    (player_->GetPlayerCorner(2).z - Enemy->GetSight().SightRight.z) +
+		    (Enemy->GetSight().SightRight.z - Enemy->GetWorldPosition().z) *
+		    (Enemy->GetSight().SightRight.x - player_->GetPlayerCorner(2).x),
+		};
+		float intersectPointB[12] =
+		{
+		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) *//x3.x4
+		    (player_->GetPlayerCorner(1).z - Enemy->GetWorldPosition().z) +//y2.y3
+		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) *//y3.y4
+		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(1).x),//x3.x2
+
+		    (Enemy->GetSight().SightLeft.x - Enemy->GetSight().SightRight.x) *
+		    (player_->GetPlayerCorner(1).z - Enemy->GetSight().SightLeft.z) +
+		    (Enemy->GetSight().SightLeft.z - Enemy->GetSight().SightRight.z) *
+		    (Enemy->GetSight().SightLeft.x - player_->GetPlayerCorner(1).x),
+
+		    (Enemy->GetSight().SightRight.x - Enemy->GetWorldPosition().x) *
+		    (player_->GetPlayerCorner(1).z - Enemy->GetSight().SightRight.z) +
+		    (Enemy->GetSight().SightRight.z - Enemy->GetWorldPosition().z) *
+		    (Enemy->GetSight().SightRight.x - player_->GetPlayerCorner(1).x),
+
+
+		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) *//x3.x4
+		    (player_->GetPlayerCorner(3).z - Enemy->GetWorldPosition().z) +//y2.y3
+		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) *//y3.y4
+		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(3).x),//x3.x2
+
+		    (Enemy->GetSight().SightLeft.x - Enemy->GetSight().SightRight.x) *
+		    (player_->GetPlayerCorner(3).z - Enemy->GetSight().SightLeft.z) +
+		    (Enemy->GetSight().SightLeft.z - Enemy->GetSight().SightRight.z) *
+		    (Enemy->GetSight().SightLeft.x - player_->GetPlayerCorner(3).x),
+
+		    (Enemy->GetSight().SightRight.x - Enemy->GetWorldPosition().x) *
+		    (player_->GetPlayerCorner(3).z - Enemy->GetSight().SightRight.z) +
+		    (Enemy->GetSight().SightRight.z - Enemy->GetWorldPosition().z) *
+		    (Enemy->GetSight().SightRight.x - player_->GetPlayerCorner(3).x),
+
+
+		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) *//x3.x4
+		    (player_->GetPlayerCorner(2).z - Enemy->GetWorldPosition().z) +//y2.y3
+		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) *//y3.y4
+		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(2).x),//x3.x2
+
+		    (Enemy->GetSight().SightLeft.x - Enemy->GetSight().SightRight.x) *
+		    (player_->GetPlayerCorner(2).z - Enemy->GetSight().SightLeft.z) +
+		    (Enemy->GetSight().SightLeft.z - Enemy->GetSight().SightRight.z) *
+		    (Enemy->GetSight().SightLeft.x - player_->GetPlayerCorner(2).x),
+
+		    (Enemy->GetSight().SightRight.x - Enemy->GetWorldPosition().x) *
+		    (player_->GetPlayerCorner(2).z - Enemy->GetSight().SightRight.z) +
+		    (Enemy->GetSight().SightRight.z - Enemy->GetWorldPosition().z) *
+		    (Enemy->GetSight().SightRight.x - player_->GetPlayerCorner(2).x),
+
+
+		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) *//x3.x4
+		    (player_->GetPlayerCorner(0).z - Enemy->GetWorldPosition().z) +//y2.y3
+		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) *//y3.y4
+		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(0).x),//x3.x2
+
+		    (Enemy->GetSight().SightLeft.x - Enemy->GetSight().SightRight.x) *
+		    (player_->GetPlayerCorner(0).z - Enemy->GetSight().SightLeft.z) +
+		    (Enemy->GetSight().SightLeft.z - Enemy->GetSight().SightRight.z) *
+		    (Enemy->GetSight().SightLeft.x - player_->GetPlayerCorner(0).x),
+
+		    (Enemy->GetSight().SightRight.x - Enemy->GetWorldPosition().x) *
+		    (player_->GetPlayerCorner(0).z - Enemy->GetSight().SightRight.z) +
+		    (Enemy->GetSight().SightRight.z - Enemy->GetWorldPosition().z) *
+		    (Enemy->GetSight().SightRight.x - player_->GetPlayerCorner(0).x),
+		};
+
+
+		for (uint32_t i = 0; i < 12; i++)
+		{
+			if (intersectPointA[i] * intersectPointB[i],0)
+				{
+					return true;
+				} else
+				{
+					return false;
+				}
+		}
+	};
 };
