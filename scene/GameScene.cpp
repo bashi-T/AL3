@@ -8,6 +8,7 @@ GameScene::GameScene() {}
 
 GameScene::~GameScene()
 {
+	delete sprite_;
 	delete model_;
 	delete player_;
 	delete debugCamera_;
@@ -30,6 +31,8 @@ void GameScene::Initialize()
 	audio_ = Audio::GetInstance();
 
 	textureHandle_ = TextureManager::Load("uvChecker.png");
+	textureHandleSpr_ = TextureManager::Load("white1x1.png");
+	sprite_ = Sprite::Create(textureHandleSpr_,{WinApp::kWindowWidth,WinApp::kWindowHeight});
 	model_ = Model::Create();
 	viewProjection_.Initialize();
 	modelSkydome_ = Model::CreateFromOBJ("world", true);
@@ -86,11 +89,7 @@ UpdateEnemyPopCommands();
 	for (Enemy* enemy : enemys_)
 	{
 		enemy->Update();
-		if (input_->TriggerKey(DIK_SPACE))
-		{
-			enemy->SetIsDiscover();
-		}
-
+		CheckSight();
 	}
 	//for (EnemyBullet* bullet : enemyBullets_) {
 	//	bullet->Update();
@@ -170,7 +169,8 @@ void GameScene::Draw()
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
-	player_->DrawUI();
+
+	sprite_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -247,7 +247,7 @@ void GameScene::Encount(Vector3 translate)
 	newEnemy->Initialise(model_, translate);
 	enemys_.push_back(newEnemy);
 	newEnemy->SetPlayer(player_);
-	newEnemy->SetGameScene(this);
+	//newEnemy->SetGameScene(this);
 }
 
 void GameScene::LoadEnemyPopData()
@@ -300,49 +300,17 @@ void GameScene::UpdateEnemyPopCommands()
 	}
 }
 
-bool GameScene::CheckSight()
+void GameScene::CheckSight()
 {
-	Vector3 lineP[4] =
-	{
-	    {player_->GetPlayerCorner(0).x,
-	     player_->GetPlayerCorner(0).y,
-	     player_->GetPlayerCorner(0).z},
-
-	    {player_->GetPlayerCorner(1).x,
-	     player_->GetPlayerCorner(1).y,
-	     player_->GetPlayerCorner(1).z},
-
-	    {player_->GetPlayerCorner(3).x,
-	     player_->GetPlayerCorner(3).y,
-	     player_->GetPlayerCorner(3).z},
-
-	    {player_->GetPlayerCorner(2).x,
-	     player_->GetPlayerCorner(2).y,
-	     player_->GetPlayerCorner(2).z}
-    };
 	const std::list<Enemy*>& enemys = GetEnemys();
 	for (Enemy* Enemy : enemys)
 	{
-		Vector3 lineS[3] =
-		{
-		    {Enemy->GetSight().SightLeft.x - Enemy->GetWorldPosition().x,
-		     Enemy->GetSight().SightLeft.y - Enemy->GetWorldPosition().y,
-		     Enemy->GetSight().SightLeft.z - Enemy->GetWorldPosition().z   },
-
-		    {Enemy->GetSight().SightRight.x - Enemy->GetWorldPosition().x,
-		     Enemy->GetSight().SightRight.y - Enemy->GetWorldPosition().y,
-		     Enemy->GetSight().SightRight.z - Enemy->GetWorldPosition().z  },
-
-		    {Enemy->GetSight().SightLeft.x - Enemy->GetSight().SightRight.x,
-		     Enemy->GetSight().SightLeft.y - Enemy->GetSight().SightRight.y,
-		     Enemy->GetSight().SightLeft.z - Enemy->GetSight().SightRight.z},
-		};
 		float intersectPointA[12] =
 		{
-		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) *//x3.x4
-		    (player_->GetPlayerCorner(0).z - Enemy->GetWorldPosition().z) +//y1.y3
-		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) *//y3.y4
-		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(0).x),//x3.x1
+		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) * //x3.x4
+		    (player_->GetPlayerCorner(0).z - Enemy->GetWorldPosition().z) + //y1.y3
+		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) * //y3.y4
+		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(0).x),  //x3.x1
 
 		    (Enemy->GetSight().SightLeft.x - Enemy->GetSight().SightRight.x) *
 		    (player_->GetPlayerCorner(0).z - Enemy->GetSight().SightLeft.z) +
@@ -355,10 +323,10 @@ bool GameScene::CheckSight()
 		    (Enemy->GetSight().SightRight.x - player_->GetPlayerCorner(0).x),
 
 
-		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) *//x3.x4
-		    (player_->GetPlayerCorner(1).z - Enemy->GetWorldPosition().z) +//y1.y3
-		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) *//y3.y4
-		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(1).x),//x3.x1
+		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) * //x3.x4
+		    (player_->GetPlayerCorner(1).z - Enemy->GetWorldPosition().z) + //y1.y3
+		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) * //y3.y4
+		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(1).x),  //x3.x1
 
 		    (Enemy->GetSight().SightLeft.x - Enemy->GetSight().SightRight.x) *
 		    (player_->GetPlayerCorner(1).z - Enemy->GetSight().SightLeft.z) +
@@ -371,10 +339,10 @@ bool GameScene::CheckSight()
 		    (Enemy->GetSight().SightRight.x - player_->GetPlayerCorner(1).x),
 
 
-		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) *//x3.x4
-		    (player_->GetPlayerCorner(3).z - Enemy->GetWorldPosition().z) +//y1.y3
-		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) *//y3.y4
-		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(3).x),//x3.x1
+		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) * //x3.x4
+		    (player_->GetPlayerCorner(3).z - Enemy->GetWorldPosition().z) + //y1.y3
+		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) * //y3.y4
+		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(3).x),  //x3.x1
 
 		    (Enemy->GetSight().SightLeft.x - Enemy->GetSight().SightRight.x) *
 		    (player_->GetPlayerCorner(3).z - Enemy->GetSight().SightLeft.z) +
@@ -387,10 +355,10 @@ bool GameScene::CheckSight()
 		    (Enemy->GetSight().SightRight.x - player_->GetPlayerCorner(3).x),
 
 
-		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) *//x3.x4
-		    (player_->GetPlayerCorner(2).z - Enemy->GetWorldPosition().z) +//y1.y3
-		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) *//y3.y4
-		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(2).x),//x3.x1
+		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) * //x3.x4
+		    (player_->GetPlayerCorner(2).z - Enemy->GetWorldPosition().z) + //y1.y3
+		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) * //y3.y4
+		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(2).x),  //x3.x1
 
 		    (Enemy->GetSight().SightLeft.x - Enemy->GetSight().SightRight.x) *
 		    (player_->GetPlayerCorner(2).z - Enemy->GetSight().SightLeft.z) +
@@ -404,10 +372,10 @@ bool GameScene::CheckSight()
 		};
 		float intersectPointB[12] =
 		{
-		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) *//x3.x4
-		    (player_->GetPlayerCorner(1).z - Enemy->GetWorldPosition().z) +//y2.y3
-		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) *//y3.y4
-		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(1).x),//x3.x2
+		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) * //x3.x4
+		    (player_->GetPlayerCorner(1).z - Enemy->GetWorldPosition().z) + //y2.y3
+		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) * //y3.y4
+		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(1).x),  //x3.x2
 
 		    (Enemy->GetSight().SightLeft.x - Enemy->GetSight().SightRight.x) *
 		    (player_->GetPlayerCorner(1).z - Enemy->GetSight().SightLeft.z) +
@@ -420,10 +388,10 @@ bool GameScene::CheckSight()
 		    (Enemy->GetSight().SightRight.x - player_->GetPlayerCorner(1).x),
 
 
-		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) *//x3.x4
-		    (player_->GetPlayerCorner(3).z - Enemy->GetWorldPosition().z) +//y2.y3
-		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) *//y3.y4
-		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(3).x),//x3.x2
+		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) * //x3.x4
+		    (player_->GetPlayerCorner(3).z - Enemy->GetWorldPosition().z) + //y2.y3
+		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) * //y3.y4
+		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(3).x),  //x3.x2
 
 		    (Enemy->GetSight().SightLeft.x - Enemy->GetSight().SightRight.x) *
 		    (player_->GetPlayerCorner(3).z - Enemy->GetSight().SightLeft.z) +
@@ -436,10 +404,10 @@ bool GameScene::CheckSight()
 		    (Enemy->GetSight().SightRight.x - player_->GetPlayerCorner(3).x),
 
 
-		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) *//x3.x4
-		    (player_->GetPlayerCorner(2).z - Enemy->GetWorldPosition().z) +//y2.y3
-		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) *//y3.y4
-		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(2).x),//x3.x2
+		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) * //x3.x4
+		    (player_->GetPlayerCorner(2).z - Enemy->GetWorldPosition().z) + //y2.y3
+		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) * //y3.y4
+		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(2).x),  //x3.x2
 
 		    (Enemy->GetSight().SightLeft.x - Enemy->GetSight().SightRight.x) *
 		    (player_->GetPlayerCorner(2).z - Enemy->GetSight().SightLeft.z) +
@@ -452,10 +420,10 @@ bool GameScene::CheckSight()
 		    (Enemy->GetSight().SightRight.x - player_->GetPlayerCorner(2).x),
 
 
-		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) *//x3.x4
-		    (player_->GetPlayerCorner(0).z - Enemy->GetWorldPosition().z) +//y2.y3
-		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) *//y3.y4
-		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(0).x),//x3.x2
+		    (Enemy->GetWorldPosition().x - Enemy->GetSight().SightLeft.x) * //x3.x4
+		    (player_->GetPlayerCorner(0).z - Enemy->GetWorldPosition().z) + //y2.y3
+		    (Enemy->GetWorldPosition().z - Enemy->GetSight().SightLeft.z) * //y3.y4
+		    (Enemy->GetWorldPosition().x - player_->GetPlayerCorner(0).x),  //x3.x2
 
 		    (Enemy->GetSight().SightLeft.x - Enemy->GetSight().SightRight.x) *
 		    (player_->GetPlayerCorner(0).z - Enemy->GetSight().SightLeft.z) +
@@ -468,16 +436,29 @@ bool GameScene::CheckSight()
 		    (Enemy->GetSight().SightRight.x - player_->GetPlayerCorner(0).x),
 		};
 
-
 		for (uint32_t i = 0; i < 12; i++)
 		{
-			if (intersectPointA[i] * intersectPointB[i],0)
+			if (intersectPointA[i] * intersectPointB[i] < 0)
+			{
+				Enemy->SetIsDiscover(1);
+				Enemy->SetDiscoverCount(900);
+				Enemy->SetSeekCount(300);
+				sprite_->SetColor({1.0f, 0.0f, 0.0f, 1.0f});
+			}
+			if (Enemy->GetIsDiscover() == 1 && intersectPointA[i] * intersectPointB[i] > 0)
+			{
+				int32_t EnemyDiscoverCount = Enemy->GetDiscoverCount();
+				EnemyDiscoverCount--;
+				Enemy->SetDiscoverCount(EnemyDiscoverCount);
+				if (EnemyDiscoverCount == 0)
 				{
-					return true;
-				} else
-				{
-					return false;
-				}
+					Enemy->SetIsDiscover(2);
+				};
+			}
+			if (Enemy->GetIsDiscover() == 0)
+			{
+				sprite_->SetColor({1.0f, 0.0f, 0.0f, 0.0f});
+			}
 		}
 	};
 };

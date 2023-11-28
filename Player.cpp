@@ -146,11 +146,11 @@ void Player::Update(const ViewProjection viewProjection)
 	//	worldTransform3Dreticle_.translation_.z);
 	//ImGui::End();   
 
-	Attack();
-	for (PlayerBullet* bullet : bullets_)
-	{
-	   bullet->Update();
-	}
+	//Attack();
+	//for (PlayerBullet* bullet : bullets_)
+	//{
+	//   bullet->Update();
+	//}
 }
 
 void Player::Translate()
@@ -243,27 +243,27 @@ void Player::SetCollition()
 {
 	PlayerCorner[0] =//rightfront
 	{ 
-		worldTransform_.matWorld_.m[3][0] + 2.0f,
+		worldTransform_.matWorld_.m[3][0] + 2.5f,
 		worldTransform_.matWorld_.m[3][1],
-		worldTransform_.matWorld_.m[3][2] + 2.0f
+		worldTransform_.matWorld_.m[3][2] + 2.5f
 	};
 	PlayerCorner[1] =//rightback
 	{ 
-		worldTransform_.matWorld_.m[3][0] + 2.0f,
+		worldTransform_.matWorld_.m[3][0] + 2.5f,
 		worldTransform_.matWorld_.m[3][1],
-		worldTransform_.matWorld_.m[3][2] - 2.0f
+		worldTransform_.matWorld_.m[3][2] - 2.5f
 	};
 	PlayerCorner[2] =//leftfront
 	{ 
-		worldTransform_.matWorld_.m[3][0] - 2.0f,
+		worldTransform_.matWorld_.m[3][0] - 2.5f,
 		worldTransform_.matWorld_.m[3][1],
-		worldTransform_.matWorld_.m[3][2] + 2.0f
+		worldTransform_.matWorld_.m[3][2] + 2.5f
 	};
 	PlayerCorner[3] =//leftback
 	{ 
-		worldTransform_.matWorld_.m[3][0] - 2.0f,
+		worldTransform_.matWorld_.m[3][0] - 2.5f,
 		worldTransform_.matWorld_.m[3][1],
-		worldTransform_.matWorld_.m[3][2] - 2.0f
+		worldTransform_.matWorld_.m[3][2] - 2.5f
 	};
 
 }
@@ -274,7 +274,7 @@ void Player::SetParent(const WorldTransform* parent)
 
 void Player::DrawUI()
 {
-	sprite2DReticle_->Draw();
+	//sprite2DReticle_->Draw();
 }
 
 Vector3 Player::GetWorldPosition()
@@ -293,5 +293,5 @@ void Player::Draw(ViewProjection viewProjection)
 	{
 		bullet->Draw(viewProjection);
 	}
-	ReticleModel_->Draw(worldTransform3Dreticle_, viewProjection, ReticleTextureHandle_);
+	//ReticleModel_->Draw(worldTransform3Dreticle_, viewProjection, ReticleTextureHandle_);
 };

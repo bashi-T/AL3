@@ -8,13 +8,11 @@
 #include"EnemyBullet.h"
 #include<random>
 #include"ALVector.h"
+#include<DirectXMath.h>
+#include "Player.h"
 
-class Player;
-class GameScene;
-class Enemy
-{
+class Enemy {
 public:
-
 	~Enemy();
 	void Initialise(Model* model, Vector3 translate);
 
@@ -27,7 +25,7 @@ public:
 	void Leave();
 
 	void Fire();
-	
+
 	void ResetApproach();
 
 	Vector3 GetWorldPosition();
@@ -38,6 +36,8 @@ public:
 
 	void SetSight();
 
+	void SetRadian();
+
 	enum class Phase {
 		Approach,
 		Leave,
@@ -45,27 +45,18 @@ public:
 	Phase phase_ = Phase::Approach;
 
 	static const int kFireInterval = 64;
-	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
+	// void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 	void SetPlayer(Player* player) { player_ = player; }
 	bool IsDead() const { return isDead_; }
-	void SetIsDiscover();
+	void SetIsDiscover(int i);
+	void SetDiscoverCount(int i);
+	void SetSeekCount(int i);
+
 	int32_t GetIsDiscover() { return IsDiscover; }
-	
-	private:
-	struct Sight
-	{
-		Vector3 SightLeft{};
-		Vector3 SightRight{};
-		float angle = 60.0f;
-		float range=5.0f;
-	}sight;
+	int32_t GetDiscoverCount() { return DiscoverCount; }
+	int32_t GetSeekCount() { return seekCount; }
 
-public:
-	Sight GetSight() { return sight; }
-
-	private:
-	//EnemyBullet* bullet_ = nullptr;
-	GameScene* gameScene_ = nullptr;
+private:
 	Player* player_ = nullptr;
 	WorldTransform worldTransform_;
 	Model* model_ = nullptr;
@@ -82,8 +73,19 @@ public:
 	int32_t stayTimer = 120;
 	int32_t distinationX;
 	int32_t distinationZ;
-	int32_t IsDiscover = 0;
+	int IsDiscover = 0;
+	int DiscoverCount = 900;
 	int32_t seekCount = 300;
-	
+	float theta_ = 3.1415926535f;
+	struct Sight {
+		Vector3 SightLeft{};
+		Vector3 SightRight{};
+		float radian = 0.0f;
+		float baseRadian = 0.0f;
+		float range = 50.0f;
+	} sight;
+
+public:
+	Sight GetSight() { return sight; }
 };
 

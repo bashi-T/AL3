@@ -1,7 +1,4 @@
 #include "enemy.h"
-#include "Player.h"
-#include"GameScene.h"
-#include<math.h>
 
 Enemy::~Enemy()
 {
@@ -9,43 +6,33 @@ Enemy::~Enemy()
 
 void Enemy::Initialise(Model* model,Vector3 translate)
 {
+	sight.radian = theta_ * 1 / 3;
 	assert(model);
 	model_ = model;
-	textureHandle_ = TextureManager::Load("sand.png");
+	textureHandle_ = TextureManager::Load("JunglePocket.png");
 	worldTransform_.Initialize();
-	input_ = Input::GetInstance();
 	worldTransform_.translation_ = translate;
 	worldTransform_.matWorld_.m[3][0] = translate.x;
-	worldTransform_.matWorld_.m[3][1] = translate.y;
+	worldTransform_.matWorld_.m[3][1] = 0.0f;
 	worldTransform_.matWorld_.m[3][2] = translate.z;
 	ResetApproach();
 }
 
 void Enemy::Update()
 {
-	
 	const float kBulletSpeedZ = -0.5f;
 	Vector3 velocity(0, 0, kBulletSpeedZ);
 
-	//switch (phase_) {
-	//case Phase::Approach:
-	//default:
-	//	Approach();
-	//	break;
-	//case Phase::Leave:
-	//	Leave();
-	//	break;
-	//}
-
+	SetSight();
+	SetRadian();
 	MoveRand();
 	worldTransform_.UpdateMatrix();
-	//FireTimer--;
-	//if (FireTimer == 0) {
-	//	Fire();
-	//	FireTimer = kFireInterval;
-	//}
-
-	SetSight();
+	ImGui::Begin("Enemy");
+	ImGui::InputFloat3("translation", &worldTransform_.translation_.x);
+	ImGui::InputFloat3("DistXYZ", &distXYZ.x);
+	ImGui::InputInt("IsDiscover", &IsDiscover);
+	
+	ImGui::End();
 }
 
 void Enemy::Draw(const ViewProjection& viewProjection)
@@ -59,7 +46,8 @@ void Enemy::Approach()
 	worldTransform_.translation_.x += kEnemySpeedX;
 	worldTransform_.translation_.y += kEnemySpeedY;
 	worldTransform_.translation_.z += kEnemySpeedZ;
-	if (worldTransform_.translation_.z < 20.0f) {
+	if (worldTransform_.translation_.z < 20.0f)
+	{
 		phase_ = Phase::Leave;
 	}
 }
@@ -94,7 +82,7 @@ void Enemy::Fire()
 
 	EnemyBullet* newBullet = new EnemyBullet();
 	newBullet->Initialise(model_, worldTransform_.translation_, velocity);
-	gameScene_->enemyBullets_.push_back(newBullet);
+	//gameScene_->enemyBullets_.push_back(newBullet);
 }
 
 void Enemy::ResetApproach()
@@ -111,7 +99,17 @@ Vector3 Enemy::GetWorldPosition()
 	return worldPos;
 }
 
-void Enemy::OnCollition() { isDead_ = true; }
+void Enemy::OnCollition()
+{
+	//if (IsDiscover == 0)
+	//{
+	//	SetIsDiscover(1);
+	//}else if (IsDiscover == 1&&DiscoverCount==0)
+	//{
+	//	SetIsDiscover(2);
+	//	DiscoverCount = 300;
+	//}
+};
 
 void Enemy::MoveRand()
 {
@@ -263,21 +261,71 @@ void Enemy::SetSight()
 {
 	sight.SightLeft =
 	{
-	    worldTransform_.matWorld_.m[3][0] + cos(sight.angle) * sight.range,
+	    worldTransform_.matWorld_.m[3][0] + cos(sight.baseRadian + sight.radian) * sight.range,
 	    worldTransform_.matWorld_.m[3][1],
-	    worldTransform_.matWorld_.m[3][2] + sin(sight.angle) * sight.range
+	    worldTransform_.matWorld_.m[3][2] + sin(sight.baseRadian + sight.radian) * sight.range
 	};
 	
 	sight.SightRight =
 	{
-	    worldTransform_.matWorld_.m[3][0] - cos(sight.angle) * sight.range,
+	    worldTransform_.matWorld_.m[3][0] + cos(sight.baseRadian - sight.radian) * sight.range,
 	    worldTransform_.matWorld_.m[3][1],
-	    worldTransform_.matWorld_.m[3][2] - sin(sight.angle) * sight.range
+	    worldTransform_.matWorld_.m[3][2] + sin(sight.baseRadian - sight.radian) * sight.range
 	};
 }
 
-void Enemy::SetIsDiscover() 
+void Enemy::SetRadian()
 {
-	IsDiscover++;
+	if (distXYZ.x > worldTransform_.matWorld_.m[3][0] &&//right
+	    distXYZ.z == worldTransform_.matWorld_.m[3][2])
+	{
+		sight.baseRadian = 0.0f;
+		worldTransform_.rotation_.y = 0.0f;
+	}
+	if (distXYZ.x > worldTransform_.matWorld_.m[3][0] &&//rightfront
+	    distXYZ.z > worldTransform_.matWorld_.m[3][2])
+	{
+		sight.baseRadian = theta_ * 1 / 4;
+		worldTransform_.rotation_.y = theta_ * 1 / 4;
+
+	}
+	if (distXYZ.x > worldTransform_.matWorld_.m[3][0] &&//rightback
+	    distXYZ.z < worldTransform_.matWorld_.m[3][2]) {
+		sight.baseRadian = theta_ * 7 / 4;
+		worldTransform_.rotation_.y = theta_ * 7 / 4;
+		
+	}
+	if (distXYZ.x < worldTransform_.matWorld_.m[3][0] &&//left
+	    distXYZ.z == worldTransform_.matWorld_.m[3][2]) {
+		sight.baseRadian = theta_;
+		worldTransform_.rotation_.y = theta_;
+	}
+	if (distXYZ.x < worldTransform_.matWorld_.m[3][0] &&//leftfront
+	    distXYZ.z > worldTransform_.matWorld_.m[3][2]) {
+		sight.baseRadian = theta_ * 3 / 4;
+		worldTransform_.rotation_.y = theta_ * 3 / 4;
+	}
+	if (distXYZ.x > worldTransform_.matWorld_.m[3][0] &&//leftback
+	    distXYZ.z < worldTransform_.matWorld_.m[3][2]) {
+		sight.baseRadian = theta_ * 5 / 4;
+		worldTransform_.rotation_.y = theta_ * 5 / 4;
+	}
+	if (distXYZ.x == worldTransform_.matWorld_.m[3][0] &&//front
+	    distXYZ.z > worldTransform_.matWorld_.m[3][2]) {
+		sight.baseRadian = theta_ * 1 / 2;
+		worldTransform_.rotation_.y = theta_ * 1 / 2;
+	}
+	if (distXYZ.x == worldTransform_.matWorld_.m[3][0] &&//back
+	    distXYZ.z < worldTransform_.matWorld_.m[3][2]) {
+		sight.baseRadian = theta_ * 3 / 2;
+		worldTransform_.rotation_.y = theta_ * 3 / 2;
+	}
 }
+
+void Enemy::SetSeekCount(int i) { seekCount = i; }
+
+void Enemy::SetIsDiscover(int i) 
+{ IsDiscover = i; }
+
+void Enemy::SetDiscoverCount(int i) { DiscoverCount = i; }
 	

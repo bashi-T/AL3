@@ -11,6 +11,7 @@
 #include"Skydome.h"
 #include"RailCamera.h"
 #include"sstream"
+#include<WinApp.h>
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -41,7 +42,7 @@ public: // メンバ関数
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw(/*ViewProjection*/);
+	void Draw();
 
 	void CheckAllCollitions();
 
@@ -53,7 +54,7 @@ public: // メンバ関数
 
 	void UpdateEnemyPopCommands();
 
-	bool CheckSight();
+	void CheckSight();
 	
 	std::list<EnemyBullet*> enemyBullets_;
 	const std::list<EnemyBullet*> GetBullets() const { return enemyBullets_; }
@@ -70,6 +71,7 @@ private: // メンバ変数
 	/// ゲームシーン用
 	/// </summary>
 	uint32_t textureHandle_ = 0;
+	uint32_t textureHandleSpr_ = 0;
 	Sprite* sprite_ = nullptr;
 
 	Model* model_ = nullptr;

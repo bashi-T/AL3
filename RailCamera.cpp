@@ -48,7 +48,7 @@ void RailCamera::Update()
 void RailCamera::Translate()
 {
 	Vector3 move = {0, 0, 0};
-	const float kCameraSpeed = 0.4f;
+	const float kCameraSpeed = 0.6f;
 
 	if (input_->PushKey(DIK_LEFT))
 	{
